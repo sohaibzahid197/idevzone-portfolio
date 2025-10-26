@@ -136,7 +136,7 @@ export default function SkillsSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
-          {Object.entries(skillsByCategory).map(([category, categorySkills]: [string, any[]]) => {
+          {(Object.entries(skillsByCategory) as [string, any[]][]).map(([category, categorySkills]) => {
             const IconComponent = categoryIcons[category as keyof typeof categoryIcons];
             const colorClass = categoryColors[category as keyof typeof categoryColors];
             
