@@ -1,3 +1,5 @@
+import { Project, Skill, SocialLink } from '../types';
+
 export const projects: Project[] = [
   {
     id: '1',
