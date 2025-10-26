@@ -205,7 +205,7 @@ export default function ProjectsSection() {
 
                   {/* Tech Stack */}
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {project.techStack.map((tech, techIndex) => (
+                    {project.techStack.map((tech: string, techIndex: number) => (
                       <motion.span
                         key={tech}
                         initial={{ opacity: 0, scale: 0.8 }}
