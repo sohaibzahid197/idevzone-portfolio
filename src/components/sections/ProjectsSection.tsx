@@ -150,7 +150,7 @@ export default function ProjectsSection() {
                   
                   {/* Floating Tech Stack Badges */}
                   <div className="absolute top-4 right-4 flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                    {project.techStack.slice(0, 3).map((tech, techIndex) => (
+                    {project.techStack.slice(0, 3).map((tech: string, techIndex: number) => (
                       <motion.span
                         key={tech}
                         initial={{ opacity: 0, scale: 0 }}
