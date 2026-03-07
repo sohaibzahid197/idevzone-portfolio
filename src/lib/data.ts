@@ -66,7 +66,6 @@ export const skills: Skill[] = [
   
   // Cloud & DevOps
   { name: 'AWS', category: 'tools' },
-  { name: 'GCP', category: 'tools' },
   { name: 'Firebase Hosting', category: 'tools' },
   { name: 'Git', category: 'tools' },
   

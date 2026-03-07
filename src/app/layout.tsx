@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "iDevZone — Portfolio of Sohaib Zahid",
+  title: "Sohaib Zahid — Full Stack Web & Mobile Developer",
   description: "Portfolio of Sohaib Zahid, Full Stack Web & Mobile App Developer. Explore my projects, skills, achievements, and experience.",
   keywords: ["Sohaib Zahid", "iDevZone", "Full Stack Developer", "Mobile App Developer", "React Native", "Next.js", "AI", "Portfolio"],
   authors: [{ name: "Sohaib Zahid" }],
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     apple: '/favicon.svg',
   },
   openGraph: {
-    title: "iDevZone — Portfolio of Sohaib Zahid",
+    title: "Sohaib Zahid — Full Stack Web & Mobile Developer",
     description: "Portfolio of Sohaib Zahid, Full Stack Web & Mobile App Developer. Explore my projects, skills, achievements, and experience.",
     url: "https://idevzone.com",
     siteName: "iDevZone",
@@ -35,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "iDevZone — Portfolio of Sohaib Zahid",
-    description: "Portfolio of Sohaib Zahid, Full Stack Web & Mobile App Developer. Explore my projects, skills, achievements, and experience.",
+    title: "Sohaib Zahid — Full Stack Web & Mobile Developer",
+    description: "Portfolio of Sohaib Zahid, Full Stack Web & Mobile App Developer.",
   },
   robots: {
     index: true,
@@ -57,32 +58,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const theme = localStorage.getItem('idevzone-theme') || 'dark';
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (e) {
-                // Fallback to dark theme if localStorage is not available
-                document.documentElement.classList.add('dark');
-              }
-            `,
-          }}
-        />
-      </head>
+    <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-300`}
+        className={`${spaceGrotesk.variable} ${inter.variable} antialiased`}
       >
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

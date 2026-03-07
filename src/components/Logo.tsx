@@ -4,40 +4,28 @@ import { motion } from 'framer-motion';
 
 interface LogoProps {
   className?: string;
-  showIcon?: boolean;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export default function Logo({ className = '', showIcon = true, size = 'md' }: LogoProps) {
+export default function Logo({ className = '', size = 'md' }: LogoProps) {
   const sizeClasses = {
     sm: 'text-lg',
-    md: 'text-2xl',
-    lg: 'text-3xl'
-  };
-
-  const iconSizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
+    md: 'text-xl',
+    lg: 'text-2xl'
   };
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className={`flex items-center gap-2 font-bold ${sizeClasses[size]} ${className}`}
+    <motion.a
+      href="#home"
+      whileHover={{ scale: 1.02 }}
+      className={`flex items-center gap-2.5 font-bold ${sizeClasses[size]} ${className}`}
     >
-      {showIcon && (
-        <motion.div
-          animate={{ rotate: [0, 360] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className={`${iconSizeClasses[size]} bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-mono`}
-        >
-          {'</>'}
-        </motion.div>
-      )}
-      <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-        iDevZone
+      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xs font-mono font-bold tracking-tighter">
+        {'</>'}
+      </div>
+      <span className="text-white tracking-tight">
+        iDev<span className="text-blue-400">Zone</span>
       </span>
-    </motion.div>
+    </motion.a>
   );
 }

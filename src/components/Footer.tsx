@@ -1,144 +1,95 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react';
-import { socialLinks } from '@/lib/data';
+import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import Logo from './Logo';
 
-export default function Footer() {
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'github':
-        return <Github className="w-5 h-5" />;
-      case 'linkedin':
-        return <Linkedin className="w-5 h-5" />;
-      case 'twitter':
-        return <Twitter className="w-5 h-5" />;
-      case 'mail':
-        return <Mail className="w-5 h-5" />;
-      default:
-        return <Mail className="w-5 h-5" />;
-    }
-  };
+const quickLinks = ['Projects', 'Skills', 'About', 'Experience', 'Contact'];
 
+export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="bg-slate-900 dark:bg-slate-950 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <Logo size="lg" />
-            <p className="text-slate-300 leading-relaxed">
-              Full Stack Web & Mobile App Developer passionate about creating modern, 
-              fast, and scalable digital products using React Native, Next.js, and AI.
+    <footer className="bg-[#0a0a0a] border-t border-white/[0.06]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Brand */}
+          <div className="space-y-4">
+            <Logo size="md" />
+            <p className="text-neutral-500 text-sm leading-relaxed max-w-xs">
+              Full Stack Web & Mobile App Developer building modern digital products with React Native, Next.js, and AI.
             </p>
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-2 bg-slate-800 hover:bg-blue-600 rounded-lg transition-colors duration-200"
-                >
-                  {getIcon(social.icon)}
-                </motion.a>
-              ))}
+            <div className="flex gap-3">
+              <a
+                href="https://github.com/sohaibzahid197"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-white/[0.04] hover:bg-white/[0.08] rounded-lg transition-colors text-neutral-400 hover:text-white"
+              >
+                <Github className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/isohaibzahid/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-white/[0.04] hover:bg-white/[0.08] rounded-lg transition-colors text-neutral-400 hover:text-white"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a
+                href="mailto:letsdev.sohaib@gmail.com"
+                className="p-2 bg-white/[0.04] hover:bg-white/[0.08] rounded-lg transition-colors text-neutral-400 hover:text-white"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <h4 className="text-lg font-semibold">Quick Links</h4>
-            <div className="space-y-2">
-              {['Projects', 'Skills', 'About', 'Journey', 'Experience', 'Contact'].map((link) => (
-                <motion.button
+          <div>
+            <h4 className="text-sm font-semibold text-white mb-4">Quick Links</h4>
+            <div className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <button
                   key={link}
                   onClick={() => {
                     const element = document.getElementById(link.toLowerCase());
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  whileHover={{ x: 5 }}
-                  className="block text-slate-300 hover:text-white transition-colors duration-200"
+                  className="block text-sm text-neutral-500 hover:text-white transition-colors"
                 >
                   {link}
-                </motion.button>
+                </button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <h4 className="text-lg font-semibold">Get In Touch</h4>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-blue-400" />
-                <span className="text-slate-300">letsdev.sohaib@gmail.com</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                </div>
-                <span className="text-slate-300">Available for freelance work</span>
-              </div>
+          {/* Contact */}
+          <div>
+            <h4 className="text-sm font-semibold text-white mb-4">Contact</h4>
+            <div className="space-y-2.5 text-sm text-neutral-500">
+              <p>letsdev.sohaib@gmail.com</p>
+              <p>+92 321 3181197</p>
+              <p>Faisalabad, Pakistan</p>
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center"
-        >
-          <div className="flex items-center space-x-2 text-slate-400">
-            <span>© 2025 Sohaib Zahid — iDevZone. All rights reserved.</span>
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            >
-              <Heart className="w-4 h-4 text-red-500 fill-current" />
-            </motion.div>
-            <span>Made with Next.js</span>
-          </div>
-          
+        {/* Bottom */}
+        <div className="py-6 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-neutral-600">
+            &copy; {new Date().getFullYear()} Sohaib Zahid. All rights reserved.
+          </p>
           <motion.button
             onClick={scrollToTop}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="mt-4 md:mt-0 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200"
+            whileHover={{ y: -2 }}
+            className="p-2 bg-white/[0.04] hover:bg-white/[0.08] rounded-lg transition-colors text-neutral-500 hover:text-white"
           >
-            Back to Top
+            <ArrowUp className="w-4 h-4" />
           </motion.button>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

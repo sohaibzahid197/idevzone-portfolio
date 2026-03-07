@@ -1,34 +1,50 @@
 'use client';
 
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-import { ChevronDown, Download, Eye } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowDown, Github, Linkedin } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import dynamic from 'next/dynamic';
+
+const ParticleNetwork = dynamic(() => import('@/components/ParticleNetwork'), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function HeroSection() {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  const fullText = "I build modern, fast, and scalable digital products using React Native, Next.js, and AI.";
-  const typingSpeed = 50;
-  const deletingSpeed = 30;
-  
+
+  const fullText = "I build modern, fast & scalable digital products using React Native, Next.js, and AI.";
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  // Mouse tracking for parallax
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  const springX = useSpring(mouseX, { stiffness: 150, damping: 15 });
-  const springY = useSpring(mouseY, { stiffness: 150, damping: 15 });
+  // GSAP character reveal animation
+  useGSAP(() => {
+    const chars = nameRef.current?.querySelectorAll('.hero-char');
+    if (chars && chars.length > 0) {
+      gsap.set(chars, { y: 60, opacity: 0, rotateX: -40 });
+      gsap.to(chars, {
+        y: 0,
+        opacity: 1,
+        rotateX: 0,
+        stagger: 0.035,
+        duration: 0.7,
+        ease: 'back.out(1.7)',
+        delay: 0.4,
+      });
+    }
+  }, { scope: nameRef });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,211 +59,160 @@ export default function HeroSection() {
       } else if (currentIndex === 0 && isDeleting) {
         setIsDeleting(false);
       }
-    }, isDeleting ? deletingSpeed : typingSpeed);
+    }, isDeleting ? 25 : 45);
 
     return () => clearTimeout(timer);
-  }, [currentIndex, isDeleting, fullText, typingSpeed, deletingSpeed]);
+  }, [currentIndex, isDeleting, fullText]);
 
-  const scrollToProjects = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (rect) {
-      const x = (e.clientX - rect.left - rect.width / 2) / 20;
-      const y = (e.clientY - rect.top - rect.height / 2) / 20;
-      mouseX.set(x);
-      mouseY.set(y);
-    }
-  };
-
-  const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  const splitChars = (text: string) => {
+    return text.split('').map((char, i) => (
+      <span
+        key={i}
+        className="hero-char inline-block"
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
   };
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      onMouseMove={handleMouseMove}
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
     >
-      {/* 3D Parallax Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
-        <motion.div
-          style={{ y }}
-          className="absolute inset-0 bg-gradient-to-br from-blue-100/30 via-purple-100/30 to-pink-100/30 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20"
-        />
+      {/* Layer 1: Aurora Borealis Background */}
+      <div className="aurora-container" aria-hidden="true">
+        <div className="aurora-layer-1" />
+        <div className="aurora-layer-2" />
+        <div className="aurora-layer-3" />
       </div>
 
-      {/* Interactive Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => {
-          // Use deterministic positioning based on index to avoid hydration mismatch
-          const left = (i * 3.33) % 100;
-          const top = (i * 7.77) % 100;
-          const scale = 1 + (i % 3) * 0.5;
-          const duration = 8 + (i % 4);
-          const delay = i * 0.2;
-          
-          return (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-30"
-              animate={{
-                x: [0, (i % 2 === 0 ? 1 : -1) * 100],
-                y: [0, (i % 3 === 0 ? 1 : -1) * 100],
-                scale: [1, scale, 1],
-                opacity: [0.3, 0.8, 0.3],
-              }}
-              transition={{
-                duration,
-                repeat: Infinity,
-                ease: "linear",
-                delay,
-              }}
-              style={{
-                left: `${left}%`,
-                top: `${top}%`,
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {/* Parallax Background Elements */}
-      <motion.div
-        style={{
-          x: useTransform(springX, [-50, 50], [-20, 20]),
-          y: useTransform(springY, [-50, 50], [-20, 20]),
-        }}
-        className="absolute inset-0"
-      >
-        <div className="absolute top-20 left-20 w-40 h-40 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-60 h-60 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-500/5 to-blue-500/5 rounded-full blur-3xl" />
-      </motion.div>
-
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Main Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-8"
-          >
-            {/* Greeting */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg text-blue-600 dark:text-blue-400 font-medium"
-            >
-              Hello, I'm
-            </motion.div>
-
-            {/* Name with Enhanced Animation */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-600 dark:from-white dark:via-blue-200 dark:to-indigo-300 bg-clip-text text-transparent"
-              style={{
-                textShadow: '0 0 30px rgba(59, 130, 246, 0.3)',
-              }}
-            >
-              Sohaib Zahid
-            </motion.h1>
-
-            {/* Title */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-2xl md:text-3xl text-slate-600 dark:text-slate-300 font-medium"
-            >
-              Full Stack Web & Mobile App Developer | Founder of iDevZone
-            </motion.h2>
-
-            {/* Enhanced Typewriter Tagline */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed min-h-[3rem]"
-            >
-              <span className="font-medium">{displayText}</span>
-              <motion.span
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-                className="ml-1 text-blue-500 text-2xl"
-              >
-                |
-              </motion.span>
-            </motion.div>
-
-            {/* Enhanced CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
-            >
-              <motion.button
-                onClick={() => window.open('https://github.com/sohaibzahid197', '_blank')}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Download className="w-5 h-5" />
-                  View GitHub
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.button>
-
-              <motion.button
-                onClick={() => window.open('https://www.linkedin.com/in/isohaibzahid/', '_blank')}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative px-8 py-4 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold rounded-full transition-all duration-300 backdrop-blur-sm bg-white/10 dark:bg-slate-900/10 overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Eye className="w-5 h-5" />
-                  Connect on LinkedIn
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-blue-600 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"
-                  initial={{ scale: 0 }}
-                />
-              </motion.button>
-            </motion.div>
-          </motion.div>
-
-          {/* Enhanced Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.2 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          >
-            <motion.button
-              onClick={scrollToProjects}
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-3 rounded-full hover:bg-white/10 dark:hover:bg-slate-800/10 group"
-            >
-              <ChevronDown className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
-            </motion.button>
-          </motion.div>
+      {/* Animated Gradient Mesh Blobs */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-500/[0.07] rounded-full blur-[120px] animate-mesh-1" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/[0.05] rounded-full blur-[120px] animate-mesh-2" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="w-[600px] h-[600px] bg-indigo-500/[0.04] rounded-full blur-[150px] animate-mesh-3" />
         </div>
       </div>
+
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }}
+      />
+
+      {/* Layer 2: Interactive Particle Network */}
+      <ParticleNetwork />
+
+      {/* Layer 3: Content */}
+      <motion.div
+        style={{ y, opacity }}
+        className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+      >
+        {/* Label */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-6"
+        >
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            Available for Projects
+          </span>
+        </motion.div>
+
+        {/* Name - GSAP Character Reveal */}
+        <h1
+          ref={nameRef}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight"
+          style={{ perspective: '1000px' }}
+        >
+          <span className="text-white">{splitChars('Sohaib ')}</span>
+          <span className="text-blue-400">{splitChars('Zahid')}</span>
+        </h1>
+
+        {/* Title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="text-xl md:text-2xl text-neutral-400 font-medium mb-8"
+        >
+          Full Stack Web & Mobile Developer{' '}
+          <span className="text-blue-400">+</span>{' '}
+          Founder of iDevZone
+        </motion.h2>
+
+        {/* Typewriter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="max-w-2xl mx-auto mb-12 min-h-[3.5rem]"
+        >
+          <p className="text-lg text-neutral-500 leading-relaxed">
+            {displayText}
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+              className="text-blue-500 ml-0.5"
+            >
+              |
+            </motion.span>
+          </p>
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
+          <a
+            href="https://github.com/sohaibzahid197"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
+          >
+            <Github className="w-5 h-5" />
+            View GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/isohaibzahid/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/[0.12] hover:border-white/[0.25] text-white font-semibold rounded-lg transition-all duration-200 hover:bg-white/[0.04] hover:-translate-y-0.5"
+          >
+            <Linkedin className="w-5 h-5" />
+            Connect on LinkedIn
+          </a>
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+      >
+        <motion.button
+          onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="flex flex-col items-center gap-2 text-neutral-600 hover:text-neutral-400 transition-colors"
+        >
+          <span className="text-xs font-medium uppercase tracking-widest">Scroll</span>
+          <ArrowDown className="w-4 h-4" />
+        </motion.button>
+      </motion.div>
     </section>
   );
 }
