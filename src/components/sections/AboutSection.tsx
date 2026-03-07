@@ -5,6 +5,52 @@ import { Code, Calendar, Users, Award } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollReveal from '@/components/ScrollReveal';
+import TextReveal from '@/components/TextReveal';
+
+gsap.registerPlugin(ScrollTrigger);
+
+function ScrollHighlightText({ text }: { text: string }) {
+  const containerRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const words = el.querySelectorAll('.highlight-word');
+    gsap.set(words, { opacity: 0.15 });
+
+    const anim = gsap.to(words, {
+      opacity: 1,
+      stagger: 0.02,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%',
+        end: 'bottom 60%',
+        scrub: 1,
+      },
+    });
+
+    return () => {
+      anim.scrollTrigger?.kill();
+      anim.kill();
+    };
+  }, []);
+
+  const words = text.split(' ').map((word, i) => (
+    <span key={i} className="highlight-word inline">
+      {word}{' '}
+    </span>
+  ));
+
+  return (
+    <p ref={containerRef} className="leading-relaxed">
+      {words}
+    </p>
+  );
+}
 
 const stats = [
   { number: '50+', label: 'Projects', icon: Code },
@@ -60,13 +106,7 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
+          <ScrollReveal variant="slide-left" className="relative">
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto lg:mx-0 rounded-2xl overflow-hidden">
               <Image
                 src="/profile-photo.jpeg"
@@ -77,30 +117,20 @@ export default function AboutSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent" />
             </div>
             <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20 rounded-2xl -z-10 blur-sm" />
-          </motion.div>
+          </ScrollReveal>
 
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal variant="slide-right">
             <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
               About Me
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Passionate about building{' '}
-              <span className="text-gradient">great products</span>
-            </h2>
+            <TextReveal className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Passionate about building great products
+            </TextReveal>
 
-            <div className="space-y-4 text-neutral-400 leading-relaxed mb-10">
-              <p>
-                I&apos;m a Full Stack Developer with 2+ years of experience building cross-platform mobile and web applications using React Native, Next.js, and AI integrations. I&apos;ve delivered 15+ applications with advanced features like subscriptions, real-time communication, and NLP-powered AI systems.
-              </p>
-              <p>
-                I focus on building smooth user experiences and scalable solutions. My expertise spans mobile app development, web applications, AI integration, and modern development practices.
-              </p>
+            <div className="space-y-4 text-neutral-400 mb-10">
+              <ScrollHighlightText text="I'm a Full Stack Developer with 2+ years of experience building cross-platform mobile and web applications using React Native, Next.js, and AI integrations. I've delivered 15+ applications with advanced features like subscriptions, real-time communication, and NLP-powered AI systems." />
+              <ScrollHighlightText text="I focus on building smooth user experiences and scalable solutions. My expertise spans mobile app development, web applications, AI integration, and modern development practices." />
             </div>
 
             {/* Stats */}
@@ -127,7 +157,7 @@ export default function AboutSection() {
             >
               Let&apos;s Connect
             </button>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import dynamic from 'next/dynamic';
+import MagneticButton from '@/components/MagneticButton';
 
 const ParticleNetwork = dynamic(() => import('@/components/ParticleNetwork'), {
   ssr: false,
@@ -175,24 +176,28 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <a
-            href="https://github.com/sohaibzahid197"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
-          >
-            <Github className="w-5 h-5" />
-            View GitHub
-          </a>
-          <a
-            href="https://www.linkedin.com/in/isohaibzahid/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/[0.12] hover:border-white/[0.25] text-white font-semibold rounded-lg transition-all duration-200 hover:bg-white/[0.04] hover:-translate-y-0.5"
-          >
-            <Linkedin className="w-5 h-5" />
-            Connect on LinkedIn
-          </a>
+          <MagneticButton>
+            <a
+              href="https://github.com/sohaibzahid197"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
+            >
+              <Github className="w-5 h-5" />
+              View GitHub
+            </a>
+          </MagneticButton>
+          <MagneticButton>
+            <a
+              href="https://www.linkedin.com/in/isohaibzahid/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/[0.12] hover:border-white/[0.25] text-white font-semibold rounded-lg transition-all duration-200 hover:bg-white/[0.04] hover:-translate-y-0.5"
+            >
+              <Linkedin className="w-5 h-5" />
+              Connect on LinkedIn
+            </a>
+          </MagneticButton>
         </motion.div>
       </motion.div>
 

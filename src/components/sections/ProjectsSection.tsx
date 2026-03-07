@@ -1,10 +1,15 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
 import { projects } from '@/lib/data';
 import Image from 'next/image';
 import { useRef, useState, useEffect, type MouseEvent as ReactMouseEvent } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollReveal from '@/components/ScrollReveal';
+import TextReveal from '@/components/TextReveal';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -76,123 +81,149 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
-export default function ProjectsSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15 }
-    }
-  };
+function ProjectCard({ project }: { project: typeof projects[number] }) {
+  return (
+    <div className="group" data-cursor="View">
+      <TiltCard className="relative h-full">
+        <div className="bg-[#111] rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/[0.06] h-full flex flex-col">
+          {/* Image */}
+          <div className="relative h-52 md:h-64 overflow-hidden">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent" />
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' as const }
-    }
-  };
+            {/* Overlay Actions */}
+            <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
+                >
+                  <ExternalLink className="w-5 h-5 text-white" />
+                </a>
+              )}
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
+                >
+                  <Github className="w-5 h-5 text-white" />
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 flex flex-col flex-1">
+            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+              {project.title}
+            </h3>
+            <p className="text-neutral-400 text-sm leading-relaxed mb-5 flex-1">
+              {project.description}
+            </p>
+
+            {/* Tech Stack */}
+            <div className="flex flex-wrap gap-2">
+              {project.techStack.map((tech: string) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1 bg-white/[0.04] border border-white/[0.06] text-neutral-300 text-xs font-medium rounded-md"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </TiltCard>
+    </div>
+  );
+}
+
+export default function ProjectsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile || !trackRef.current || !sectionRef.current) return;
+
+    const track = trackRef.current;
+    const scrollWidth = track.scrollWidth - window.innerWidth;
+
+    const tween = gsap.to(track, {
+      x: -scrollWidth,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        pin: true,
+        scrub: 1,
+        end: () => `+=${scrollWidth}`,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [isMobile]);
 
   return (
-    <section id="projects" className="section-padding bg-[#0a0a0a] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
-            Featured Work
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Projects
-          </h2>
-          <p className="text-neutral-400 text-lg max-w-2xl">
-            A selection of projects that showcase my skills in building modern, scalable applications.
-          </p>
-        </motion.div>
+    <section id="projects" ref={sectionRef} className="bg-[#0a0a0a] relative overflow-hidden">
+      <div className={isMobile ? 'section-padding' : 'py-24'}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <ScrollReveal className="mb-16">
+            <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
+              Featured Work
+            </span>
+            <TextReveal className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              Projects
+            </TextReveal>
+            <p className="text-neutral-400 text-lg max-w-2xl">
+              A selection of projects that showcase my skills in building modern, scalable applications.
+            </p>
+          </ScrollReveal>
+        </div>
 
-        {/* Projects Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          {projects.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={itemVariants}
-              className="group"
-            >
-              <TiltCard className="relative h-full">
-                <div className="bg-[#111] rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/[0.06] h-full flex flex-col">
-                  {/* Image */}
-                  <div className="relative h-52 overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent" />
-
-                    {/* Overlay Actions */}
-                    <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
-                      {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
-                        >
-                          <ExternalLink className="w-5 h-5 text-white" />
-                        </a>
-                      )}
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
-                        >
-                          <Github className="w-5 h-5 text-white" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-neutral-400 text-sm leading-relaxed mb-5 flex-1">
-                      {project.description}
-                    </p>
-
-                    {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-2">
-                      {project.techStack.map((tech: string) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 bg-white/[0.04] border border-white/[0.06] text-neutral-300 text-xs font-medium rounded-md"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Horizontal scroll track (desktop) / Vertical grid (mobile) */}
+        {isMobile ? (
+          <div className="px-4 grid grid-cols-1 gap-6">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        ) : (
+          <div
+            ref={trackRef}
+            className="flex gap-8 pl-8"
+            style={{ width: 'max-content' }}
+          >
+            {projects.map((project) => (
+              <div key={project.id} className="w-[500px] flex-shrink-0">
+                <ProjectCard project={project} />
+              </div>
+            ))}
+            {/* Spacer so last card isn't cut off */}
+            <div className="w-16 flex-shrink-0" />
+          </div>
+        )}
       </div>
     </section>
   );

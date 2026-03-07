@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Calendar, MapPin, Building } from 'lucide-react';
+import ScrollReveal from '@/components/ScrollReveal';
+import TextReveal from '@/components/TextReveal';
 
 const experienceData = [
   {
@@ -34,63 +35,35 @@ const experienceData = [
 ];
 
 export default function ExperienceSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 }
-    }
-  };
-
   return (
     <section id="experience" className="section-padding bg-[#0f0f0f] relative">
       <div className="absolute top-1/3 right-0 w-[400px] h-[400px] bg-blue-500/[0.03] rounded-full blur-[120px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
+        <ScrollReveal className="mb-16">
           <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
             Career Path
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <TextReveal className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Experience
-          </h2>
+          </TextReveal>
           <p className="text-neutral-400 text-lg max-w-2xl">
             My professional journey building innovative solutions.
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="max-w-3xl"
-        >
+        <ScrollReveal variant="fade-up" className="max-w-3xl">
           {/* Timeline */}
           <div className="relative">
             {/* Timeline line */}
             <div className="absolute left-[7px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-blue-500/40 via-blue-500/20 to-transparent" />
 
             <div className="space-y-8">
-              {experienceData.map((exp) => (
-                <motion.div
+              {experienceData.map((exp, index) => (
+                <ScrollReveal
                   key={exp.company}
-                  variants={itemVariants}
+                  variant="slide-right"
+                  delay={index * 0.15}
                   className="relative pl-10"
                 >
                   {/* Timeline dot */}
@@ -142,11 +115,11 @@ export default function ExperienceSection() {
                       ))}
                     </div>
                   </div>
-                </motion.div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </section>
   );

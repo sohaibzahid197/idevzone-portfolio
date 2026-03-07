@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Rocket, Brain, DollarSign, Star, Users, Zap, Coins, GraduationCap } from 'lucide-react';
+import ScrollReveal from '@/components/ScrollReveal';
+import TextReveal from '@/components/TextReveal';
 
 const achievementsData = [
   {
@@ -55,59 +56,26 @@ const achievementsData = [
 ];
 
 export default function AchievementsSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  };
-
   return (
     <section id="achievements" className="section-padding bg-[#0a0a0a] relative">
       <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/[0.03] rounded-full blur-[120px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
+        <ScrollReveal className="mb-16">
           <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
             Milestones
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <TextReveal className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Key Achievements
-          </h2>
+          </TextReveal>
           <p className="text-neutral-400 text-lg max-w-2xl">
             Highlights from my professional journey.
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
+        <ScrollReveal variant="scale" stagger={0.08} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {achievementsData.map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="group"
-            >
+            <div key={index} className="group">
               <div className="bg-[#111] rounded-xl border border-white/[0.06] p-5 hover:border-white/[0.12] transition-all duration-300 hover:-translate-y-1 h-full">
                 <div
                   className="inline-flex p-2.5 rounded-lg mb-4 group-hover:scale-110 transition-transform duration-300"
@@ -122,9 +90,9 @@ export default function AchievementsSection() {
                   {item.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </ScrollReveal>
       </div>
     </section>
   );

@@ -6,6 +6,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 export default function MagneticCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [cursorText, setCursorText] = useState('');
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
 
@@ -29,12 +30,23 @@ export default function MagneticCursor() {
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    // Magnetic effect for buttons and links
+    // Magnetic effect for buttons and links + cursor text
     const handleElementHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+
+      // Check for data-cursor elements first
+      const dataCursorEl = target.closest('[data-cursor]') as HTMLElement | null;
+      if (dataCursorEl) {
+        const text = dataCursorEl.getAttribute('data-cursor') || '';
+        setCursorText(text);
+        setIsHovering(true);
+        return;
+      }
+
       const interactive = target.closest('a, button, [role="button"]');
       if (interactive) {
         setIsHovering(true);
+        setCursorText('');
         const rect = interactive.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -46,6 +58,7 @@ export default function MagneticCursor() {
         cursorY.set(e.clientY + pullY);
       } else {
         setIsHovering(false);
+        setCursorText('');
       }
     };
 
@@ -64,6 +77,9 @@ export default function MagneticCursor() {
 
   if (!isVisible) return null;
 
+  const hasText = cursorText.length > 0;
+  const ringSize = hasText ? 80 : isHovering ? 48 : 32;
+
   return (
     <>
       {/* Outer ring */}
@@ -74,13 +90,25 @@ export default function MagneticCursor() {
       >
         <motion.div
           animate={{
-            width: isHovering ? 48 : 32,
-            height: isHovering ? 48 : 32,
-            opacity: isHovering ? 0.6 : 0.3,
+            width: ringSize,
+            height: ringSize,
+            opacity: hasText ? 0.9 : isHovering ? 0.6 : 0.3,
           }}
-          transition={{ duration: 0.2 }}
-          className="rounded-full border border-white -translate-x-1/2 -translate-y-1/2"
-        />
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="rounded-full border border-white -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+          style={{ backgroundColor: hasText ? 'rgba(255,255,255,0.9)' : 'transparent' }}
+        >
+          {hasText && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="text-black text-xs font-semibold uppercase tracking-wider"
+            >
+              {cursorText}
+            </motion.span>
+          )}
+        </motion.div>
       </motion.div>
 
       {/* Inner dot */}
@@ -90,8 +118,9 @@ export default function MagneticCursor() {
       >
         <motion.div
           animate={{
-            width: isHovering ? 6 : 4,
-            height: isHovering ? 6 : 4,
+            width: hasText ? 0 : isHovering ? 6 : 4,
+            height: hasText ? 0 : isHovering ? 6 : 4,
+            opacity: hasText ? 0 : 1,
           }}
           transition={{ duration: 0.15 }}
           className="bg-white rounded-full -translate-x-1/2 -translate-y-1/2"

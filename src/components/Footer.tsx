@@ -1,16 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import Logo from './Logo';
 
 const quickLinks = ['Projects', 'Skills', 'About', 'Experience', 'Contact'];
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <footer className="bg-[#0a0a0a] border-t border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,17 +73,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="py-6 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="py-6 border-t border-white/[0.06] flex items-center justify-center">
           <p className="text-xs text-neutral-600">
             &copy; {new Date().getFullYear()} Sohaib Zahid. All rights reserved.
           </p>
-          <motion.button
-            onClick={scrollToTop}
-            whileHover={{ y: -2 }}
-            className="p-2 bg-white/[0.04] hover:bg-white/[0.08] rounded-lg transition-colors text-neutral-500 hover:text-white"
-          >
-            <ArrowUp className="w-4 h-4" />
-          </motion.button>
         </div>
       </div>
     </footer>

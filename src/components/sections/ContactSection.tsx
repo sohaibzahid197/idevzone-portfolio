@@ -1,8 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Mail, Send, Phone, MapPin, Clock, MessageCircle, Github, Linkedin } from 'lucide-react';
 import { useState } from 'react';
+import ScrollReveal from '@/components/ScrollReveal';
+import TextReveal from '@/components/TextReveal';
+import MagneticButton from '@/components/MagneticButton';
 
 const contactInfo = [
   { icon: Mail, label: 'Email', value: 'letsdev.sohaib@gmail.com', color: '#3b82f6' },
@@ -33,33 +35,21 @@ export default function ContactSection() {
       <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-blue-500/[0.03] rounded-full blur-[150px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
+        <ScrollReveal className="mb-16">
           <span className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">
             Get In Touch
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <TextReveal className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Let&apos;s Work Together
-          </h2>
+          </TextReveal>
           <p className="text-neutral-400 text-lg max-w-2xl">
             Have a project in mind? I&apos;d love to hear from you.
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
           {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3"
-          >
+          <ScrollReveal variant="slide-left" className="lg:col-span-3">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
@@ -110,6 +100,7 @@ export default function ContactSection() {
                 />
               </div>
 
+              <MagneticButton>
               <button
                 type="submit"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
@@ -117,17 +108,12 @@ export default function ContactSection() {
                 <Send className="w-4 h-4" />
                 Send Message
               </button>
+              </MagneticButton>
             </form>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 space-y-4"
-          >
+          <ScrollReveal variant="slide-right" className="lg:col-span-2 space-y-4">
             {contactInfo.map((item) => (
               <div
                 key={item.label}
@@ -193,7 +179,7 @@ export default function ContactSection() {
                 Open for freelance projects and full-time opportunities.
               </p>
             </div>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
