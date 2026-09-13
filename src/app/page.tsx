@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/sections/HeroSection';
@@ -23,25 +24,29 @@ export default function Home() {
   return (
     <>
       <Preloader onComplete={() => setPreloaderDone(true)} />
-      <SmoothScroll>
-        <div className={`min-h-screen bg-[#0a0a0a] ${preloaderDone ? '' : 'overflow-hidden max-h-screen'}`}>
-          <MagneticCursor />
-          <ScrollToTop />
-          <Navbar />
-          <main>
-            <HeroSection />
-            <Marquee />
-            <ProjectsSection />
-            <SkillsSection />
-            <AboutSection />
-            <ExperienceSection />
-            <AchievementsSection />
-            <EducationSection />
-            <ContactSection />
-          </main>
-          <Footer />
-        </div>
-      </SmoothScroll>
+      {/* reducedMotion="user" makes every framer-motion animation below honour
+          the OS "reduce motion" setting; the default is to ignore it. */}
+      <MotionConfig reducedMotion="user">
+        <SmoothScroll>
+          <div className={`min-h-screen bg-[#0a0a0a] ${preloaderDone ? '' : 'overflow-hidden max-h-screen'}`}>
+            <MagneticCursor />
+            <ScrollToTop />
+            <Navbar />
+            <main id="main-content" tabIndex={-1} className="focus:outline-none">
+              <HeroSection />
+              <Marquee />
+              <ProjectsSection />
+              <SkillsSection />
+              <AboutSection />
+              <ExperienceSection />
+              <AchievementsSection />
+              <EducationSection />
+              <ContactSection />
+            </main>
+            <Footer />
+          </div>
+        </SmoothScroll>
+      </MotionConfig>
     </>
   );
 }

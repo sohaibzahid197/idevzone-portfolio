@@ -2,24 +2,88 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, Github, Linkedin } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import dynamic from 'next/dynamic';
 import MagneticButton from '@/components/MagneticButton';
+import { scrollToSection } from '@/components/SmoothScroll';
+import { prefersReducedMotion } from '@/hooks/use-reduced-motion';
+import { siteConfig } from '@/lib/site-config';
 
 const ParticleNetwork = dynamic(() => import('@/components/ParticleNetwork'), {
   ssr: false,
   loading: () => null,
 });
 
+const TYPE_SPEED_MS = 45;
+// Lines up with the fade-in delay of the wrapper below, so the first character
+// lands as the paragraph appears rather than while it is still transparent.
+const TYPE_START_DELAY_MS = 800;
+
+// The name is revealed one character at a time, so it is split here to keep the
+// visible glyphs and the h1's accessible name from drifting apart.
+const [firstName, ...restOfName] = siteConfig.name.split(' ');
+const lastName = restOfName.join(' ');
+
+/**
+ * Types `text` out once and then stops - no delete/retype loop, and no timers
+ * left running for the life of the page. The complete sentence is rendered on
+ * the server and on the first client render, so crawlers and visitors without
+ * JavaScript get it in full; while the animation runs, the untyped remainder
+ * stays in the flow (hidden) so the line box - and the layout - never shifts.
+ */
+function Typewriter({ text }: { text: string }) {
+  // null means "not animating": render every character.
+  const [typedLength, setTypedLength] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+
+    // The first tick clears the sentence, every tick after it adds a character.
+    let index = -1;
+
+    const tick = () => {
+      index += 1;
+      setTypedLength(index);
+      if (index < text.length) {
+        timer = setTimeout(tick, index === 0 ? TYPE_START_DELAY_MS : TYPE_SPEED_MS);
+      }
+    };
+
+    let timer = setTimeout(tick, 0);
+
+    return () => clearTimeout(timer);
+  }, [text]);
+
+  const typedCount = typedLength ?? text.length;
+  const isTyping = typedLength !== null && typedLength < text.length;
+
+  return (
+    <>
+      {/* Screen readers get the stable, complete sentence; the copy below is a
+          purely visual effect. */}
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">
+        {text.slice(0, typedCount)}
+        {isTyping && (
+          <>
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+              className="text-blue-500 ml-0.5"
+            >
+              |
+            </motion.span>
+            <span className="invisible">{text.slice(typedCount)}</span>
+          </>
+        )}
+      </span>
+    </>
+  );
+}
+
 export default function HeroSection() {
-  const [displayText, setDisplayText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const fullText = "I build modern, fast & scalable digital products using React Native, Next.js, and AI.";
-
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const { scrollYProgress } = useScroll({
@@ -33,42 +97,28 @@ export default function HeroSection() {
   // GSAP character reveal animation
   useGSAP(() => {
     const chars = nameRef.current?.querySelectorAll('.hero-char');
-    if (chars && chars.length > 0) {
-      gsap.set(chars, { y: 60, opacity: 0, rotateX: -40 });
-      gsap.to(chars, {
-        y: 0,
-        opacity: 1,
-        rotateX: 0,
-        stagger: 0.035,
-        duration: 0.7,
-        ease: 'back.out(1.7)',
-        delay: 0.4,
-      });
-    }
+    if (!chars || chars.length === 0) return;
+
+    // Reduced motion: leave the characters exactly where the markup put them.
+    if (prefersReducedMotion()) return;
+
+    gsap.set(chars, { y: 60, opacity: 0, rotateX: -40 });
+    gsap.to(chars, {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      stagger: 0.035,
+      duration: 0.7,
+      ease: 'back.out(1.7)',
+      delay: 0.4,
+    });
   }, { scope: nameRef });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isDeleting && currentIndex < fullText.length) {
-        setDisplayText(fullText.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      } else if (isDeleting && currentIndex > 0) {
-        setDisplayText(fullText.slice(0, currentIndex - 1));
-        setCurrentIndex(currentIndex - 1);
-      } else if (currentIndex === fullText.length) {
-        setTimeout(() => setIsDeleting(true), 2000);
-      } else if (currentIndex === 0 && isDeleting) {
-        setIsDeleting(false);
-      }
-    }, isDeleting ? 25 : 45);
-
-    return () => clearTimeout(timer);
-  }, [currentIndex, isDeleting, fullText]);
 
   const splitChars = (text: string) => {
     return text.split('').map((char, i) => (
       <span
         key={i}
+        aria-hidden="true"
         className="hero-char inline-block"
       >
         {char === ' ' ? '\u00A0' : char}
@@ -80,7 +130,7 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
+      className="relative min-h-svh flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
     >
       {/* Layer 1: Aurora Borealis Background */}
       <div className="aurora-container" aria-hidden="true">
@@ -131,11 +181,12 @@ export default function HeroSection() {
         {/* Name - GSAP Character Reveal */}
         <h1
           ref={nameRef}
+          aria-label={siteConfig.name}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight"
           style={{ perspective: '1000px' }}
         >
-          <span className="text-white">{splitChars('Sohaib ')}</span>
-          <span className="text-blue-400">{splitChars('Zahid')}</span>
+          <span className="text-white">{splitChars(`${firstName} `)}</span>
+          <span className="text-blue-400">{splitChars(lastName)}</span>
         </h1>
 
         {/* Title */}
@@ -158,14 +209,7 @@ export default function HeroSection() {
           className="max-w-2xl mx-auto mb-12 min-h-[3.5rem]"
         >
           <p className="text-lg text-neutral-500 leading-relaxed">
-            {displayText}
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 0.8, repeat: Infinity }}
-              className="text-blue-500 ml-0.5"
-            >
-              |
-            </motion.span>
+            <Typewriter text={siteConfig.tagline} />
           </p>
         </motion.div>
 
@@ -178,7 +222,7 @@ export default function HeroSection() {
         >
           <MagneticButton>
             <a
-              href="https://github.com/sohaibzahid197"
+              href={siteConfig.social.github}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
@@ -189,7 +233,7 @@ export default function HeroSection() {
           </MagneticButton>
           <MagneticButton>
             <a
-              href="https://www.linkedin.com/in/isohaibzahid/"
+              href={siteConfig.social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/[0.12] hover:border-white/[0.25] text-white font-semibold rounded-lg transition-all duration-200 hover:bg-white/[0.04] hover:-translate-y-0.5"
@@ -209,7 +253,7 @@ export default function HeroSection() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.button
-          onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => scrollToSection('#projects')}
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
           className="flex flex-col items-center gap-2 text-neutral-600 hover:text-neutral-400 transition-colors"

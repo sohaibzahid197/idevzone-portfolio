@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import Logo from './Logo';
 import MagneticButton from './MagneticButton';
+import { scrollToSection } from './SmoothScroll';
 
 const navItems = [
   { name: 'Projects', href: '#projects' },
@@ -13,6 +14,12 @@ const navItems = [
   { name: 'Experience', href: '#experience' },
   { name: 'Contact', href: '#contact' },
 ];
+
+// Only the sections that have a nav item can ever be highlighted, so tracking
+// anything else (achievements, education) would just clear the indicator.
+const trackedSections = ['home', ...navItems.map((item) => item.href.substring(1))];
+
+const MOBILE_NAV_ID = 'mobile-nav';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,11 +30,15 @@ export default function Navbar() {
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Lenis writes the scroll position every frame, so coalesce the reads into
+    // one rAF callback per frame and keep the listener passive.
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
       setScrolled(window.scrollY > 50);
 
-      const sections = ['home', 'projects', 'skills', 'about', 'experience', 'achievements', 'education', 'contact'];
-      const currentSection = sections.find(section => {
+      const currentSection = trackedSections.find(section => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -41,16 +52,24 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  // Real anchors, so they stay crawlable and middle-clickable, but a plain
+  // click is handed to the shared Lenis-aware helper instead of jumping.
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
     setIsOpen(false);
+    scrollToSection(href);
   };
 
   return (
@@ -80,9 +99,11 @@ export default function Navbar() {
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1);
                 return (
-                  <button
+                  <a
                     key={item.name}
-                    onClick={() => scrollToSection(item.href)}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    aria-current={isActive ? 'true' : undefined}
                     className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-lg ${
                       isActive
                         ? 'text-white'
@@ -97,7 +118,7 @@ export default function Navbar() {
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
-                  </button>
+                  </a>
                 );
               })}
             </div>
@@ -105,18 +126,23 @@ export default function Navbar() {
             {/* CTA Button */}
             <div className="hidden md:block">
               <MagneticButton>
-                <button
-                  onClick={() => scrollToSection('#contact')}
-                  className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
+                <a
+                  href="#contact"
+                  onClick={(e) => handleNavClick(e, '#contact')}
+                  className="inline-block px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
                 >
                   Let&apos;s Talk
-                </button>
+                </a>
               </MagneticButton>
             </div>
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+              aria-controls={isOpen ? MOBILE_NAV_ID : undefined}
               className="md:hidden p-2 text-neutral-400 hover:text-white transition-colors rounded-lg"
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -133,13 +159,22 @@ export default function Navbar() {
                 transition={{ duration: 0.2 }}
                 className="md:hidden overflow-hidden"
               >
-                <div className="py-4 space-y-1 bg-[#111]/95 backdrop-blur-xl rounded-xl mb-4 border border-white/[0.06] px-2">
+                {/* Capped to the viewport minus the h-16 navbar and mb-4 gutter so
+                    the list stays reachable in landscape; data-lenis-prevent keeps
+                    Lenis from swallowing wheel gestures over the panel. */}
+                <div
+                  id={MOBILE_NAV_ID}
+                  data-lenis-prevent
+                  className="py-4 space-y-1 bg-[#111]/95 backdrop-blur-xl rounded-xl mb-4 border border-white/[0.06] px-2 max-h-[calc(100svh-5rem)] overflow-y-auto overscroll-contain"
+                >
                   {navItems.map((item) => {
                     const isActive = activeSection === item.href.substring(1);
                     return (
-                      <button
+                      <a
                         key={item.name}
-                        onClick={() => scrollToSection(item.href)}
+                        href={item.href}
+                        onClick={(e) => handleNavClick(e, item.href)}
+                        aria-current={isActive ? 'true' : undefined}
                         className={`block w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                           isActive
                             ? 'text-white bg-white/[0.06]'
@@ -147,16 +182,17 @@ export default function Navbar() {
                         }`}
                       >
                         {item.name}
-                      </button>
+                      </a>
                     );
                   })}
                   <div className="pt-2 px-2">
-                    <button
-                      onClick={() => scrollToSection('#contact')}
-                      className="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors"
+                    <a
+                      href="#contact"
+                      onClick={(e) => handleNavClick(e, '#contact')}
+                      className="block w-full text-center px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors"
                     >
                       Let&apos;s Talk
-                    </button>
+                    </a>
                   </div>
                 </div>
               </motion.div>

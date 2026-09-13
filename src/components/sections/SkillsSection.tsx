@@ -1,27 +1,10 @@
 'use client';
 
-import { Code, Smartphone, Server, Database, Wrench } from 'lucide-react';
-import { skills } from '@/lib/data';
+import SkillsKeyboard from '@/components/SkillsKeyboard';
 import ScrollReveal from '@/components/ScrollReveal';
 import TextReveal from '@/components/TextReveal';
 
-const categoryConfig = {
-  frontend: { icon: Code, label: 'Frontend', color: '#3b82f6' },
-  mobile: { icon: Smartphone, label: 'Mobile', color: '#a855f7' },
-  backend: { icon: Server, label: 'Backend', color: '#22c55e' },
-  database: { icon: Database, label: 'Database', color: '#f59e0b' },
-  tools: { icon: Wrench, label: 'Tools & Tech', color: '#6366f1' }
-};
-
 export default function SkillsSection() {
-  const skillsByCategory = skills.reduce((acc, skill) => {
-    if (!acc[skill.category]) {
-      acc[skill.category] = [];
-    }
-    acc[skill.category].push(skill);
-    return acc;
-  }, {} as Record<string, typeof skills>);
-
   return (
     <section id="skills" className="section-padding bg-[#0f0f0f] relative">
       <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-500/[0.03] rounded-full blur-[120px]" />
@@ -39,46 +22,8 @@ export default function SkillsSection() {
           </p>
         </ScrollReveal>
 
-        <ScrollReveal variant="fade-up" stagger={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(Object.entries(skillsByCategory) as [string, typeof skills][]).map(([category, categorySkills]) => {
-            const config = categoryConfig[category as keyof typeof categoryConfig];
-            const IconComponent = config.icon;
-
-            return (
-              <div key={category} className="group">
-                <div className="bg-[#111] rounded-xl border border-white/[0.06] p-6 hover:border-white/[0.12] transition-all duration-300 h-full">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div
-                      className="p-2.5 rounded-lg"
-                      style={{ backgroundColor: `${config.color}15` }}
-                    >
-                      <IconComponent className="w-5 h-5" style={{ color: config.color }} />
-                    </div>
-                    <h3 className="text-lg font-bold text-white">
-                      {config.label}
-                    </h3>
-                  </div>
-
-                  <div className="space-y-2">
-                    {categorySkills.map((skill) => (
-                      <div
-                        key={skill.name}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
-                      >
-                        <div
-                          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: config.color }}
-                        />
-                        <span className="text-neutral-300 text-sm font-medium">
-                          {skill.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <ScrollReveal variant="fade-up">
+          <SkillsKeyboard />
         </ScrollReveal>
       </div>
     </section>

@@ -3,78 +3,111 @@
 import { ExternalLink, Github } from 'lucide-react';
 import { projects } from '@/lib/data';
 import Image from 'next/image';
-import { useRef, useState, useEffect, type MouseEvent as ReactMouseEvent } from 'react';
+import { useRef, useState, useEffect, type PointerEvent as ReactPointerEvent } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
 import TextReveal from '@/components/TextReveal';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MAX_TILT_DEG = 8;
+const HOVER_SCALE = 1.02;
+
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)');
-  const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 });
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const frameRef = useRef<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  // The tilt and the glare are written to the element as custom properties from
+  // a single rAF, so a pointer moving across the card never re-renders React.
+  const applyTilt = () => {
+    frameRef.current = null;
+    const card = cardRef.current;
+    if (!card) return;
 
-  const handleMouseMove = (e: ReactMouseEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Measured every frame rather than cached: the track scrolls horizontally
+    // under the pin while the card is hovered, so the rect moves.
+    const rect = card.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const x = pointerRef.current.x - rect.left;
+    const y = pointerRef.current.y - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
-    setGlarePosition({
-      x: (x / rect.width) * 100,
-      y: (y / rect.height) * 100,
-    });
+    card.style.setProperty('--tilt-x', `${((y - centerY) / centerY) * -MAX_TILT_DEG}deg`);
+    card.style.setProperty('--tilt-y', `${((x - centerX) / centerX) * MAX_TILT_DEG}deg`);
+    card.style.setProperty('--tilt-scale', `${HOVER_SCALE}`);
+    card.style.setProperty('--glare-x', `${(x / rect.width) * 100}%`);
+    card.style.setProperty('--glare-y', `${(y / rect.height) * 100}%`);
   };
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)');
+  const resetTilt = () => {
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.setProperty('--tilt-x', '0deg');
+    card.style.setProperty('--tilt-y', '0deg');
+    card.style.setProperty('--tilt-scale', '1');
   };
 
-  const handleMouseEnter = () => {
+  useEffect(() => () => {
+    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+  }, []);
+
+  // A tap also fires pointer events, but never a matching leave, which used to
+  // strand cards mid-tilt on phones - so only a real mouse drives the effect.
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse' || prefersReducedMotion) return;
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+    if (frameRef.current === null) {
+      frameRef.current = requestAnimationFrame(applyTilt);
+    }
+  };
+
+  const handlePointerEnter = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse') return;
     setIsHovered(true);
+    // Only hint the compositor for as long as the card is actually moving.
+    cardRef.current?.style.setProperty('will-change', 'transform');
+  };
+
+  const handlePointerLeave = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    setIsHovered(false);
+    resetTilt();
+    cardRef.current?.style.setProperty('will-change', 'auto');
   };
 
   return (
     <div
       ref={cardRef}
       className={className}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onPointerEnter={handlePointerEnter}
       style={{
-        transform,
+        transform:
+          'perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale3d(var(--tilt-scale, 1), var(--tilt-scale, 1), var(--tilt-scale, 1))',
         transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out',
-        transformStyle: 'preserve-3d',
-        willChange: 'transform',
       }}
     >
       {children}
-      {/* Glare overlay */}
+      {/* Glare overlay - position comes from the inherited custom properties */}
       <div
         className="pointer-events-none absolute inset-0 z-10 rounded-xl overflow-hidden"
         style={{
           opacity: isHovered ? 1 : 0,
           transition: 'opacity 0.3s ease',
-          background: `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255,255,255,0.08) 0%, transparent 60%)`,
+          background:
+            'radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%)',
         }}
       />
     </div>
@@ -82,8 +115,12 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 }
 
 function ProjectCard({ project }: { project: typeof projects[number] }) {
+  // No project currently ships a public demo or a public repo, so the card has
+  // nothing to link to. Both fields are optional and come back per project.
+  const hasLinks = Boolean(project.liveUrl || project.githubUrl);
+
   return (
-    <div className="group" data-cursor="View">
+    <div className="group" {...(hasLinks ? { 'data-cursor': 'View' } : {})}>
       <TiltCard className="relative h-full">
         <div className="bg-[#111] rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/[0.06] h-full flex flex-col">
           {/* Image */}
@@ -92,17 +129,23 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
               src={project.image}
               alt={project.title}
               fill
+              sizes="(max-width: 768px) 100vw, 500px"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent" />
 
-            {/* Overlay Actions */}
-            <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+            {/* Overlay Actions - these are the only links to the project, so they
+                stay visible where there is no hover (touch) and whenever a link
+                inside them is focused. Rendered only when there is something to
+                link to, otherwise the scrim would wash out the image for nothing. */}
+            {hasLinks && (
+            <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-100 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300 bg-black/40">
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`View ${project.title} live site (opens in a new tab)`}
                   className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
                 >
                   <ExternalLink className="w-5 h-5 text-white" />
@@ -113,12 +156,14 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`View ${project.title} source on GitHub (opens in a new tab)`}
                   className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-colors border border-white/10"
                 >
                   <Github className="w-5 h-5 text-white" />
                 </a>
               )}
             </div>
+            )}
           </div>
 
           {/* Content */}
@@ -164,16 +209,20 @@ export default function ProjectsSection() {
     if (isMobile || !trackRef.current || !sectionRef.current) return;
 
     const track = trackRef.current;
-    const scrollWidth = track.scrollWidth - window.innerWidth;
+    // Read fresh on every ScrollTrigger.refresh() (which a resize triggers), so
+    // the travel and the pin length stay in step with the viewport. Clamped at
+    // 0 because a viewport wider than the track would otherwise push it right.
+    const distance = () =>
+      Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
 
     const tween = gsap.to(track, {
-      x: -scrollWidth,
+      x: () => -distance(),
       ease: 'none',
       scrollTrigger: {
         trigger: sectionRef.current,
         pin: true,
         scrub: 1,
-        end: () => `+=${scrollWidth}`,
+        end: () => `+=${distance()}`,
         invalidateOnRefresh: true,
       },
     });

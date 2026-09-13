@@ -1,14 +1,9 @@
 'use client';
 
-const techItems = [
-  'React Native', 'Next.js', 'TypeScript', 'Node.js', 'Firebase',
-  'React.js', 'Tailwind CSS', 'MongoDB', 'AWS', 'OpenAI',
-  'iOS', 'Android', 'Express.js', 'REST APIs', 'Git',
-  'GSAP', 'Framer Motion', 'GraphQL', 'Docker', 'Figma',
-];
+import { techStackNames } from '@/lib/data';
 
 function MarqueeRow({ reverse = false }: { reverse?: boolean }) {
-  const items = [...techItems, ...techItems];
+  const items = [...techStackNames, ...techStackNames];
 
   return (
     <div className="flex overflow-hidden py-1 group">
@@ -29,7 +24,9 @@ function MarqueeRow({ reverse = false }: { reverse?: boolean }) {
 
 export default function Marquee() {
   return (
-    <div className="py-8 border-y border-white/[0.04] bg-[#0a0a0a] overflow-hidden">
+    // Decorative: every name here is already announced by the Skills section,
+    // and the duplicated rows would otherwise be read out four times over.
+    <div aria-hidden="true" className="py-8 border-y border-white/[0.04] bg-[#0a0a0a] overflow-hidden">
       <MarqueeRow />
       <MarqueeRow reverse />
     </div>

@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { Fragment, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { prefersReducedMotion } from '@/hooks/use-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +25,10 @@ export default function TextReveal({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+
+    // Reduced motion: skip the hide-then-reveal entirely so the words simply
+    // stay where they already are, visible.
+    if (prefersReducedMotion()) return;
 
     const words = el.querySelectorAll('.word-inner');
     gsap.set(words, { y: '100%' });
@@ -47,10 +52,19 @@ export default function TextReveal({
     };
   }, [delay]);
 
-  const words = children.split(' ').map((word, i) => (
-    <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-      <span className="word-inner inline-block">{word}</span>
-    </span>
+  // Real space text nodes between the word spans: a CSS margin alone leaves the
+  // DOM without whitespace, so crawlers and screen readers read the heading as
+  // one run-on word. The space sits outside the clipping span so it is never
+  // cut off, and it keeps the heading soft-wrapping as before.
+  const parts = children.split(' ');
+
+  const words = parts.map((word, i) => (
+    <Fragment key={i}>
+      <span className="inline-block overflow-hidden">
+        <span className="word-inner inline-block">{word}</span>
+      </span>
+      {i < parts.length - 1 ? ' ' : null}
+    </Fragment>
   ));
 
   return (

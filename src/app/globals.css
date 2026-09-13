@@ -72,33 +72,6 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-/* Gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary), #8b5cf6, #ec4899);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 4s ease infinite;
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Hover lift */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
 /* Section padding */
 .section-padding {
   padding-top: 6rem;
@@ -110,58 +83,6 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: 8rem;
     padding-bottom: 8rem;
   }
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.3); }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes fade-in {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: glow 3s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 3s ease-in-out infinite;
 }
 
 /* Gradient Mesh Animations */
@@ -298,15 +219,6 @@ h1, h2, h3, h4, h5, h6 {
   animation: aurora-shift-3 15s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .aurora-layer-1,
-  .aurora-layer-2,
-  .aurora-layer-3 {
-    animation: none;
-    opacity: 0.2;
-  }
-}
-
 /* Preloader */
 .preloader-bar {
   animation: preloader-fill 2s ease-in-out forwards;
@@ -322,21 +234,12 @@ body::after {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: 9997;
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
-}
-
-@keyframes grain-shift {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-2%, -3%); }
-  30% { transform: translate(3%, 2%); }
-  50% { transform: translate(-1%, 4%); }
-  70% { transform: translate(2%, -2%); }
-  90% { transform: translate(-3%, 1%); }
 }
 
 /* Marquee */
@@ -379,7 +282,174 @@ body::after {
     background: transparent !important;
     color: black !important;
   }
-  .no-print {
-    display: none !important;
+}
+
+/* Reduced motion — last in the file so these win over the rules above */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .aurora-layer-1,
+  .aurora-layer-2,
+  .aurora-layer-3 {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  .animate-mesh-1,
+  .animate-mesh-2,
+  .animate-mesh-3 {
+    animation: none;
+    transform: none;
+  }
+
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
+    transform: none;
+  }
+
+  .preloader-bar {
+    animation: none;
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   Skills keyboard — a 3D mechanical keyboard where each keycap
+   is a technology. Pure CSS 3D: no library, no model, no assets.
+   Every cap is one element plus two pseudo-element walls.
+   ============================================================ */
+
+.kbd-stage {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+.kbd-board {
+  transform-style: preserve-3d;
+  /* Isometric-ish resting angle. The parallax handler nudges these two
+     custom properties; without JS the board still sits at this angle. */
+  transform:
+    rotateX(calc(50deg + var(--board-rx, 0deg)))
+    rotateZ(calc(-28deg + var(--board-rz, 0deg)));
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+/* The deck the caps sit on */
+.kbd-deck {
+  transform-style: preserve-3d;
+  background: linear-gradient(150deg, #23262b, #141619);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 40px 80px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* Deck side wall, so the base reads as a solid slab rather than a card */
+.kbd-deck::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 26px;
+  transform-origin: top center;
+  transform: rotateX(-90deg);
+  background: linear-gradient(#0f1113, #08090a);
+  border-radius: 0 0 18px 18px;
+}
+
+/* The slot exists purely so entrance animations have something to move.
+   GSAP writing a transform onto the cap itself would clobber its translateZ. */
+.kbd-slot {
+  display: block;
+  transform-style: preserve-3d;
+}
+
+.kbd-key {
+  position: relative;
+  transform-style: preserve-3d;
+  border-radius: 9px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: #fff;
+  /* --k is the technology's brand colour, set per key from data.ts */
+  background: linear-gradient(158deg,
+    color-mix(in srgb, var(--k) 88%, #ffffff 12%),
+    color-mix(in srgb, var(--k) 96%, #000000 4%));
+  transform: translateZ(var(--lift, 26px));
+  transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.3, 1), filter 0.16s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Front wall: hangs down from the cap's leading edge */
+.kbd-key::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--lift, 26px);
+  transform-origin: top center;
+  transform: rotateX(-90deg);
+  background: color-mix(in srgb, var(--k) 52%, #000000);
+  border-radius: 0 0 3px 3px;
+}
+
+/* Right wall */
+.kbd-key::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: var(--lift, 26px);
+  transform-origin: center left;
+  transform: rotateY(90deg);
+  background: color-mix(in srgb, var(--k) 38%, #000000);
+  border-radius: 0 3px 3px 0;
+}
+
+/* Press */
+.kbd-key:hover,
+.kbd-key:focus-visible {
+  --lift: 9px;
+  filter: brightness(1.16);
+  outline: none;
+}
+
+/* Dimmed when another category is selected */
+.kbd-key[data-dimmed='true'] {
+  filter: grayscale(0.85) brightness(0.4);
+}
+
+.kbd-legend {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  /* Counter-rotates the board tilt so legends read flat to the viewer */
+  transform: rotateZ(28deg) rotateX(-50deg) translateZ(1px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kbd-board,
+  .kbd-key {
+    transition: none;
   }
 }

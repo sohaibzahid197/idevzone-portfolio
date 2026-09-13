@@ -8,20 +8,14 @@ export interface Project {
   githubUrl?: string;
 }
 
+export type SkillCategory = 'frontend' | 'mobile' | 'backend' | 'database' | 'tools';
+
 export interface Skill {
+  // `name` is the stable identifier (React keys, lookups); `label` is what the UI prints.
   name: string;
-  category: 'frontend' | 'mobile' | 'backend' | 'database' | 'tools';
+  label: string;
+  category: SkillCategory;
+  // Brand hex, used for chips, dots and marquee accents on the dark background.
+  color: string;
   icon?: string;
-}
-
-export interface SocialLink {
-  name: string;
-  url: string;
-  icon: string;
-}
-
-export interface ContactForm {
-  name: string;
-  email: string;
-  message: string;
 }

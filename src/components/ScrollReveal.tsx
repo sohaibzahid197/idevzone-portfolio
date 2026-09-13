@@ -3,6 +3,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { prefersReducedMotion } from '@/hooks/use-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,6 +39,10 @@ export default function ScrollReveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Reduced motion: skip the hide-then-reveal entirely so the content simply
+    // stays where it already is, visible.
+    if (prefersReducedMotion()) return;
 
     const from = variantConfig[variant];
     const targets = stagger > 0 ? el.children : el;

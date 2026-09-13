@@ -1,15 +1,22 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Code, Calendar, Users, Award } from 'lucide-react';
+import { Code, Calendar, Users, Award, type LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
 import TextReveal from '@/components/TextReveal';
+import { scrollToSection } from '@/components/SmoothScroll';
+import { siteConfig } from '@/lib/site-config';
+import { prefersReducedMotion } from '@/hooks/use-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// text-neutral-400 at 0.75 over #0a0a0a is ~4.7:1, so the copy already clears
+// the WCAG AA 4.5:1 minimum before the scrub lifts it to full opacity.
+const RESTING_WORD_OPACITY = 0.75;
 
 function ScrollHighlightText({ text }: { text: string }) {
   const containerRef = useRef<HTMLParagraphElement>(null);
@@ -18,8 +25,11 @@ function ScrollHighlightText({ text }: { text: string }) {
     const el = containerRef.current;
     if (!el) return;
 
+    // Reduced motion: no dimming and no scrub, the paragraph just reads.
+    if (prefersReducedMotion()) return;
+
     const words = el.querySelectorAll('.highlight-word');
-    gsap.set(words, { opacity: 0.15 });
+    gsap.set(words, { opacity: RESTING_WORD_OPACITY });
 
     const anim = gsap.to(words, {
       opacity: 1,
@@ -52,12 +62,12 @@ function ScrollHighlightText({ text }: { text: string }) {
   );
 }
 
-const stats = [
-  { number: '50+', label: 'Projects', icon: Code },
-  { number: '5+', label: 'Years Exp.', icon: Calendar },
-  { number: '30+', label: 'Clients', icon: Users },
-  { number: '15+', label: 'Technologies', icon: Award }
-];
+const statIcons: Record<string, LucideIcon | undefined> = {
+  Projects: Code,
+  Years: Calendar,
+  Clients: Users,
+  Technologies: Award
+};
 
 function AnimatedCounter({ number }: { number: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,23 +77,29 @@ function AnimatedCounter({ number }: { number: string }) {
     const element = ref.current;
     if (!element) return;
 
+    // The real figure is already in the DOM for SSR, crawlers and no-JS
+    // visitors, so reduced motion simply leaves it alone.
+    if (prefersReducedMotion()) return;
+
     const match = number.match(/^(\d+)(.*)$/);
     if (!match) return;
 
     const targetValue = parseInt(match[1]);
     const suffix = match[2];
+    let tween: gsap.core.Tween | undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
+          element.textContent = `0${suffix}`;
           const obj = { val: 0 };
-          gsap.to(obj, {
+          tween = gsap.to(obj, {
             val: targetValue,
             duration: 2,
             ease: 'power2.out',
             onUpdate: () => {
-              if (element) element.textContent = `${Math.round(obj.val)}${suffix}`;
+              if (ref.current) ref.current.textContent = `${Math.round(obj.val)}${suffix}`;
             },
           });
         }
@@ -92,10 +108,13 @@ function AnimatedCounter({ number }: { number: string }) {
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      tween?.kill();
+    };
   }, [number]);
 
-  return <div ref={ref} className="text-2xl font-bold text-white">0+</div>;
+  return <div ref={ref} className="text-2xl font-bold text-white">{number}</div>;
 }
 
 export default function AboutSection() {
@@ -108,10 +127,12 @@ export default function AboutSection() {
           {/* Image */}
           <ScrollReveal variant="slide-left" className="relative">
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto lg:mx-0 rounded-2xl overflow-hidden">
+              {/* max-w-md caps the frame at 448px on every breakpoint */}
               <Image
                 src="/profile-photo.jpeg"
                 alt="Sohaib Zahid"
                 fill
+                sizes="(max-width: 480px) 100vw, 448px"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent" />
@@ -135,24 +156,28 @@ export default function AboutSection() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center p-4 bg-[#111] rounded-xl border border-white/[0.06]"
-                >
-                  <stat.icon className="w-5 h-5 text-blue-400 mx-auto mb-2" />
-                  <AnimatedCounter number={stat.number} />
-                  <div className="text-xs text-neutral-500 mt-1">{stat.label}</div>
-                </motion.div>
-              ))}
+              {siteConfig.stats.map((stat, index) => {
+                const Icon = statIcons[stat.label] ?? Award;
+
+                return (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="text-center p-4 bg-[#111] rounded-xl border border-white/[0.06]"
+                  >
+                    <Icon className="w-5 h-5 text-blue-400 mx-auto mb-2" />
+                    <AnimatedCounter number={stat.number} />
+                    <div className="text-xs text-neutral-500 mt-1">{stat.label}</div>
+                  </motion.div>
+                );
+              })}
             </div>
 
             <button
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => scrollToSection('#contact')}
               className="px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
             >
               Let&apos;s Connect

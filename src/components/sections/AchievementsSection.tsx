@@ -7,8 +7,8 @@ import TextReveal from '@/components/TextReveal';
 const achievementsData = [
   {
     icon: GraduationCap,
-    title: 'CS Degree from COMSATS',
-    description: 'Strong foundation in software engineering',
+    title: 'BS Software Engineering',
+    description: 'COMSATS University Islamabad, 2020 – 2024',
     color: '#8b5cf6'
   },
   {

@@ -1,156 +1,103 @@
 # Developer Portfolio
 
-A modern, fully responsive developer portfolio built with Next.js, TypeScript, and Tailwind CSS.
+Personal portfolio for **Sohaib Zahid** — Full Stack Web & Mobile Developer, founder of iDevZone.
+Built with Next.js 16 (App Router), TypeScript and Tailwind CSS v4.
 
-## 🚀 Features
+## Features
 
-- **Modern Design**: Clean, minimal, and professional UI
-- **Fully Responsive**: Mobile-first design that works on all devices
-- **Dark Mode**: Toggle between light and dark themes
-- **Smooth Animations**: Framer Motion animations for enhanced UX
-- **Interactive Components**: Hover effects, smooth scrolling, and transitions
-- **TypeScript**: Full type safety throughout the application
-- **Tailwind CSS**: Utility-first CSS framework for rapid styling
+- **Single-page layout** — nine sections with smooth scroll navigation
+- **Motion-rich** — GSAP scroll reveals, Framer Motion transitions, Lenis smooth scrolling, an interactive particle field
+- **Accessible by default** — skip link, live regions, honours `prefers-reduced-motion` throughout
+- **SEO-ready** — generated Open Graph image, JSON-LD Person schema, sitemap and robots routes
+- **Working contact form** — validated, rate-limited API route that delivers via Resend
+- **Fully responsive** — mobile-first, with touch-reachable controls
 
-## 📱 Sections
+## Sections
 
-1. **Hero Section**: Developer introduction with call-to-action buttons
-2. **Projects Section**: Showcase of featured projects with tech stacks
-3. **Skills Section**: Organized skills by category (Frontend, Mobile, Backend, Database, Tools)
-4. **About Section**: Personal bio with statistics and profile image
-5. **Contact Section**: Contact form and social media links
-6. **Navigation**: Sticky navbar with smooth scroll navigation
-7. **Footer**: Additional links and social media integration
+Hero · Tech marquee · Projects · Skills · About · Experience · Achievements · Education · Contact
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: Vercel-ready
+| Layer | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 (CSS-first `@theme`, no `tailwind.config`) |
+| Animation | GSAP + ScrollTrigger, Framer Motion, Lenis |
+| Particles | tsparticles (desktop only) |
+| Icons | Lucide React |
+| Email | Resend REST API (no SDK dependency) |
+| Deployment | Vercel-ready |
 
-## 🏃‍♂️ Getting Started
+## Getting Started
 
-### Prerequisites
+Requires Node.js 18+.
 
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd developer-portfolio
-```
-
-2. Install dependencies:
 ```bash
 npm install
-```
-
-3. Start the development server:
-```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-## 📁 Project Structure
+### Environment variables
+
+The contact form needs these to deliver mail. Copy `.env.example` to `.env.local` and fill it in.
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `RESEND_API_KEY` | yes | Resend API key. Without it the form returns a clear 503 and points visitors at the email address instead of failing silently. |
+| `CONTACT_TO_EMAIL` | no | Destination address. Defaults to the address in `src/lib/site-config.ts`. |
+| `CONTACT_FROM_EMAIL` | no | Verified sender. Defaults to Resend's onboarding sender. |
+
+## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── globals.css          # Global styles
-│   ├── layout.tsx          # Root layout
-│   └── page.tsx            # Home page
+│   ├── api/contact/route.ts   # Validated, rate-limited contact endpoint
+│   ├── globals.css            # Theme tokens + keyframes (Tailwind v4 @theme)
+│   ├── layout.tsx             # Metadata, JSON-LD, skip link
+│   ├── opengraph-image.tsx    # Generated 1200x630 social card
+│   ├── robots.ts
+│   ├── sitemap.ts
+│   └── page.tsx
 ├── components/
-│   ├── sections/           # Page sections
-│   │   ├── HeroSection.tsx
-│   │   ├── ProjectsSection.tsx
-│   │   ├── SkillsSection.tsx
-│   │   ├── AboutSection.tsx
-│   │   └── ContactSection.tsx
-│   ├── Navbar.tsx          # Navigation component
-│   ├── Footer.tsx          # Footer component
-│   └── DarkModeToggle.tsx # Theme toggle
+│   ├── sections/              # The nine page sections
+│   └── *.tsx                  # Navbar, Footer, motion primitives
+├── hooks/
+│   └── use-reduced-motion.ts  # SSR-safe motion preference
 ├── lib/
-│   └── data.ts             # Sample data
+│   ├── data.ts                # Projects + skills
+│   └── site-config.ts         # Single source of truth for identity
 └── types/
-    └── index.ts            # TypeScript interfaces
 ```
 
-## 🎨 Customization
+## Customising
 
-### Personal Information
+Almost everything lives in two files:
 
-Update the following files with your information:
+- **`src/lib/site-config.ts`** — name, role, email, phone, location, social links, headline stats, tagline
+- **`src/lib/data.ts`** — projects and skills
 
-1. **Hero Section** (`src/components/sections/HeroSection.tsx`):
-   - Change name, title, and tagline
-   - Update call-to-action buttons
+Experience, achievements and education are currently inline in their own section components.
 
-2. **About Section** (`src/components/sections/AboutSection.tsx`):
-   - Update bio text
-   - Replace profile image
-   - Modify statistics
+### Before deploying
 
-3. **Projects** (`src/lib/data.ts`):
-   - Add your projects
-   - Update tech stacks
-   - Add live demo and GitHub links
+- [ ] Point `siteConfig.url` at the real domain — the current value does not resolve, and canonical URLs, OG tags and the sitemap all derive from it
+- [ ] Replace the four Unsplash placeholder images in `data.ts` with real project screenshots
+- [ ] Add `liveUrl` / `githubUrl` per project once real URLs exist (cards hide the buttons while absent)
+- [ ] Set `RESEND_API_KEY` so the contact form can deliver
 
-4. **Skills** (`src/lib/data.ts`):
-   - Add/remove skills
-   - Organize by categories
+## Scripts
 
-5. **Contact** (`src/components/sections/ContactSection.tsx`):
-   - Update email address
-   - Add social media links
+```bash
+npm run dev      # development server
+npm run build    # production build
+npm run start    # serve the production build
+npm run lint     # eslint
+```
 
-### Styling
+## License
 
-- **Colors**: Modify Tailwind classes throughout components
-- **Fonts**: Update font families in `globals.css`
-- **Spacing**: Adjust padding and margins using Tailwind utilities
-- **Animations**: Customize Framer Motion animations
-
-### Images
-
-Replace placeholder images in the `public/images/` directory:
-- Profile image for About section
-- Project screenshots for Projects section
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy with zero configuration
-
-### Other Platforms
-
-The app can be deployed to any platform that supports Next.js:
-- Netlify
-- AWS Amplify
-- Railway
-- DigitalOcean App Platform
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
-
-## 📞 Support
-
-If you have any questions or need help customizing this portfolio, feel free to reach out!
-
----
-
-**Happy Coding!** 🎉
+MIT

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Nested git worktrees are full copies of this project. Without this,
+    // eslint lints every one of them and reports their code as ours.
+    ".claude/**",
   ]),
 ]);
 
