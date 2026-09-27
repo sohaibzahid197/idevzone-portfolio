@@ -16,7 +16,8 @@ const inter = Inter({
   weight: ["300", "400", "500", "600"],
 });
 
-const title = `${siteConfig.name} — ${siteConfig.role}`;
+// Brand last, so a search for "idevzone" matches the strongest on-page signal.
+const title = `${siteConfig.name} — ${siteConfig.role} | ${siteConfig.brand}`;
 const description = `Portfolio of ${siteConfig.name}, ${siteConfig.role}. Explore my projects, skills, achievements, and experience.`;
 
 /**
@@ -55,6 +56,8 @@ const structuredData = {
       "@id": `${siteConfig.url}/#website`,
       url: siteConfig.url,
       name: siteConfig.brand,
+      // Lets Google show "iDevZone" as the site name and match lowercase searches.
+      alternateName: ["idevzone", "idevzone.com"],
       inLanguage: "en",
       author: { "@id": `${siteConfig.url}/#person` },
     },

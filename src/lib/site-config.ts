@@ -32,10 +32,6 @@ export const siteConfig: SiteConfig = {
   brand: 'iDevZone',
   role: 'Full Stack Web & Mobile Developer',
 
-  // TODO: idevzone.com currently has NO DNS A record (verified against two
-  // independent public resolvers). Canonical URLs, Open Graph tags and the
-  // sitemap all point here, so before launch either point this domain at the
-  // deployment or replace this value with the real origin (e.g. the Vercel URL).
   url: 'https://idevzone.com',
 
   email: 'letsdev.sohaib@gmail.com',
