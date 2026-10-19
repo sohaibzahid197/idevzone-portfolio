@@ -1,43 +1,74 @@
 import { Project, Skill } from '../types';
 
-// TODO: `liveUrl` and `githubUrl` were removed from every project because no
-// genuine public demo exists and the repositories are private. Both fields are
-// still optional on Project and ProjectsSection only renders a button when the
-// value is present, so add them back per project once a real App Store / Play
-// Store / deployment URL or a real repository URL is available. Never point
-// them at a placeholder domain or at the GitHub profile root.
-// TODO: the four `image` values below are Unsplash stock photography, not the
-// actual products. Replace each with a real screenshot committed to /public
-// (e.g. '/projects/second-phone.webp', sized for the ~2:1 card slot). Until
-// then next.config.ts must keep the images.unsplash.com remote pattern.
+// Posters live in /public/projects and are 16:9 (1600x900). Store links are
+// only set for apps that are actually published; a card renders a button per
+// link that is present, so an unreleased app simply shows its poster.
 export const projects: Project[] = [
   {
-    id: '1',
-    title: 'Second Phone Number App',
-    description: 'A comprehensive mobile application featuring Twilio API integration for virtual numbers, voice calling, SMS messaging, and subscription billing system.',
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop',
-    techStack: ['React Native', 'Twilio API', 'Firebase', 'Subscription Billing']
+    id: 'biteset',
+    title: 'BiteSet — Meal Plan & Nutrition',
+    description: 'Personalised meal plans that balance your macros without calorie counting, with one-tap grocery lists, dish swaps and progress tracking. Backed by a custom API of 195 endpoints and an admin dashboard.',
+    image: '/projects/biteset-showcase.jpg',
+    techStack: ['React Native', 'Node.js', 'Express', 'Prisma', 'PostgreSQL'],
+    appStoreUrl: 'https://apps.apple.com/us/app/biteset-meal-plan-nutrition/id6805219049',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.biteset.app'
   },
   {
-    id: '2',
-    title: 'AI-Powered App Suite',
-    description: 'Complete AI application suite including Plagiarism Remover, Maya AI chatbot, Text Summarizer, Humanizer, and Essay Generator with advanced NLP capabilities.',
-    image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop',
-    techStack: ['React Native', 'Next.js', 'OpenAI API', 'NLP', 'Firebase']
+    id: 'miriver',
+    title: 'MiRiver — Live Traffic & Community',
+    description: 'Real-time community traffic app with a live map, incident reports that expire automatically, a community feed and a points-and-tiers reward system, managed from a Next.js admin panel.',
+    image: '/projects/miriver-showcase.jpg',
+    techStack: ['React Native', 'Expo', 'Firebase', 'Google Maps', 'Next.js'],
+    appStoreUrl: 'https://apps.apple.com/ca/app/miriver/id6768277150',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=ca.miriver.app'
   },
   {
-    id: '3',
-    title: 'Health & Fitness iOS App',
-    description: 'iOS health application with Apple HealthKit integration, real-time step tracking, serving 10K+ users with comprehensive fitness tracking and 4.8⭐ rating.',
-    image: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=600&h=400&fit=crop',
-    techStack: ['React Native', 'iOS', 'HealthKit', 'Firebase']
+    id: 'stepura',
+    title: 'Stepura — Walking Step Tracker',
+    description: 'Turns daily walking into virtual expeditions with streaks, challenges and insights. Uses a custom Kotlin native module for hardware step counting and ships in multiple languages.',
+    image: '/projects/stepura-showcase.jpg',
+    techStack: ['React Native', 'Kotlin Native Module', 'TypeScript', 'i18n'],
+    appStoreUrl: 'https://apps.apple.com/us/app/stepura-walking-step-tracker/id6806730489',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.stepura'
   },
   {
-    id: '4',
-    title: 'AI Outfit Visualization App',
-    description: 'Innovative mobile and web application featuring AI photo overlay technology for virtual clothing try-on with social sharing capabilities.',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
-    techStack: ['React Native', 'Next.js', 'AI Image Processing', 'OpenAI API', 'Firebase']
+    id: 'pastlight',
+    title: 'PastLight — AI Photo Restoration',
+    description: 'Restores old, scratched and faded photos with AI: repairs damage, sharpens faces and colourises, with a before/after slider and a personal gallery.',
+    image: '/projects/pastlight-showcase.jpg',
+    techStack: ['React Native', 'Expo', 'AI Image Processing', 'In-App Purchases'],
+    appStoreUrl: 'https://apps.apple.com/us/app/pastlight-photo-restoration/id6813961505',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.idevzone.pastlight'
+  },
+  {
+    id: 'inobill',
+    title: 'InoBill — Invoice & Receipt Maker',
+    description: 'Create, preview and send professional invoices and estimates, track clients and payments, and see reports at a glance.',
+    image: '/projects/inobill-showcase.jpg',
+    techStack: ['React Native', 'TypeScript', 'Firestore', 'PDF Generation'],
+    appStoreUrl: 'https://apps.apple.com/us/app/inobill-invoice-receipt-maker/id6812770338',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.idevzone.inobill'
+  },
+  {
+    id: 'halallenz',
+    title: 'HalalLenz — Halal Ingredient Scanner',
+    description: 'Scan a barcode or photograph an ingredient list and get a clear verdict — Halal, Doubtful or Not halal — with the ingredient that decided it, following your own school of thought.',
+    image: '/projects/halallenz-showcase.jpg',
+    techStack: ['React Native', 'Expo', 'AI Vision', 'Barcode Scanning']
+  },
+  {
+    id: 'pethealth',
+    title: 'PetVera — Pet Vaccine & Health Records',
+    description: 'Keeps every pet\'s vaccinations, medications, weight and documents in one place, with reminders and records ready to show the vet or boarding.',
+    image: '/projects/pethealth-showcase.jpg',
+    techStack: ['React Native', 'TypeScript', 'Local Notifications', 'PDF Export']
+  },
+  {
+    id: 'timberlens',
+    title: 'TimberLens — Wood & Furniture ID',
+    description: 'Point the camera at wood or furniture and AI identifies the species, style and estimated value, with restoration and build guides.',
+    image: '/projects/timberlens-showcase.jpg',
+    techStack: ['React Native', 'TypeScript', 'Firebase', 'AI Vision']
   }
 ];
 

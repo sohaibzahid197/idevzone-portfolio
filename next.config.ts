@@ -16,15 +16,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-    ],
-  },
   // Silences the workspace-root warning caused by stray lockfiles in the parent
   // directories (~/package-lock.json and ~/Desktop/package-lock.json), which made
   // Next infer the home directory as the project root.

@@ -4,6 +4,8 @@ export interface Project {
   description: string;
   image: string;
   techStack: string[];
+  appStoreUrl?: string;
+  playStoreUrl?: string;
   liveUrl?: string;
   githubUrl?: string;
 }

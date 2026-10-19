@@ -114,9 +114,38 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+      <path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.76 2.28-1.6 2.78-.41 6.9 1.15 9.16.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.37-3.69zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.01.61-2.66 1.37-.58.67-1.09 1.75-.96 2.79 1.02.08 2.05-.52 2.68-1.27z" />
+    </svg>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+      <path d="M3.6 2.2c-.2.2-.3.6-.3 1v17.6c0 .4.1.8.3 1l9.8-9.8L3.6 2.2zm10.9 10.9 2.6 2.6-11.4 6.5 8.8-9.1zm0-2.2L5.7 1.8l11.4 6.5-2.6 2.6zm3.9-1.8 3 1.7c.9.5.9 1.9 0 2.4l-3 1.7-2.8-2.9 2.8-2.9z" />
+    </svg>
+  );
+}
+
+function StoreButton({ href, label, title, icon }: { href: string; label: string; title: string; icon: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Get ${title} on ${label} (opens in a new tab)`}
+      className="relative z-20 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white text-sm font-medium transition-colors"
+    >
+      {icon}
+      {label}
+    </a>
+  );
+}
+
 function ProjectCard({ project }: { project: typeof projects[number] }) {
-  // No project currently ships a public demo or a public repo, so the card has
-  // nothing to link to. Both fields are optional and come back per project.
   const hasLinks = Boolean(project.liveUrl || project.githubUrl);
 
   return (
@@ -124,15 +153,14 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
       <TiltCard className="relative h-full">
         <div className="bg-[#111] rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/[0.06] h-full flex flex-col">
           {/* Image */}
-          <div className="relative h-52 md:h-64 overflow-hidden">
+          <div className="relative aspect-[16/9] overflow-hidden">
             <Image
               src={project.image}
-              alt={project.title}
+              alt={`${project.title} app screens`}
               fill
-              sizes="(max-width: 768px) 100vw, 500px"
+              sizes="(max-width: 768px) 100vw, 560px"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent" />
 
             {/* Overlay Actions - these are the only links to the project, so they
                 stay visible where there is no hover (touch) and whenever a link
@@ -186,6 +214,18 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
                 </span>
               ))}
             </div>
+
+            {/* Store links - only published apps have them */}
+            {(project.appStoreUrl || project.playStoreUrl) && (
+              <div className="flex flex-wrap gap-3 mt-5 pt-5 border-t border-white/[0.06]">
+                {project.appStoreUrl && (
+                  <StoreButton href={project.appStoreUrl} label="App Store" title={project.title} icon={<AppleIcon />} />
+                )}
+                {project.playStoreUrl && (
+                  <StoreButton href={project.playStoreUrl} label="Google Play" title={project.title} icon={<PlayIcon />} />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </TiltCard>
@@ -246,7 +286,7 @@ export default function ProjectsSection() {
               Projects
             </TextReveal>
             <p className="text-neutral-400 text-lg max-w-2xl">
-              A selection of projects that showcase my skills in building modern, scalable applications.
+              Apps I have designed, built and shipped to the App Store and Google Play.
             </p>
           </ScrollReveal>
         </div>
@@ -265,7 +305,7 @@ export default function ProjectsSection() {
             style={{ width: 'max-content' }}
           >
             {projects.map((project) => (
-              <div key={project.id} className="w-[500px] flex-shrink-0">
+              <div key={project.id} className="w-[560px] flex-shrink-0">
                 <ProjectCard project={project} />
               </div>
             ))}
