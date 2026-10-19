@@ -37,7 +37,7 @@ const structuredData = {
       url: siteConfig.url,
       jobTitle: siteConfig.role,
       email: `mailto:${siteConfig.email}`,
-      image: `${siteConfig.url}/profile-photo.jpeg`,
+      image: `${siteConfig.url}/sohaib-zahid.jpeg`,
       address: {
         "@type": "PostalAddress",
         // siteConfig.location holds the display form, "Faisalabad, Pakistan".
