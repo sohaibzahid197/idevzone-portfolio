@@ -125,8 +125,11 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
-          <ScrollReveal variant="slide-left" className="relative">
-            <div className="relative w-full aspect-[4/5] max-w-md mx-auto lg:mx-0 rounded-2xl overflow-hidden">
+          <ScrollReveal variant="slide-left">
+            {/* The glow is sized by this wrapper, so it hugs the photo rather
+                than the whole grid column. */}
+            <div className="relative w-full max-w-md mx-auto lg:mx-0">
+            <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden">
               {/* max-w-md caps the frame at 448px on every breakpoint */}
               <Image
                 src="/sohaib-zahid.jpeg"
@@ -138,6 +141,7 @@ export default function AboutSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent" />
             </div>
             <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20 rounded-2xl -z-10 blur-sm" />
+            </div>
           </ScrollReveal>
 
           {/* Content */}
