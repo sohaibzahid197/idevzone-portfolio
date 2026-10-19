@@ -8,7 +8,7 @@ export const projects: Project[] = [
     id: 'biteset',
     title: 'BiteSet — Meal Plan & Nutrition',
     description: 'Personalised meal plans that balance your macros without calorie counting, with one-tap grocery lists, dish swaps and progress tracking. Backed by a custom API of 195 endpoints and an admin dashboard.',
-    image: '/projects/biteset-showcase.jpg',
+    image: '/projects/biteset-poster.jpg',
     techStack: ['React Native', 'Node.js', 'Express', 'Prisma', 'PostgreSQL'],
     appStoreUrl: 'https://apps.apple.com/us/app/biteset-meal-plan-nutrition/id6805219049',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.biteset.app'
@@ -17,7 +17,7 @@ export const projects: Project[] = [
     id: 'miriver',
     title: 'MiRiver — Live Traffic & Community',
     description: 'Real-time community traffic app with a live map, incident reports that expire automatically, a community feed and a points-and-tiers reward system, managed from a Next.js admin panel.',
-    image: '/projects/miriver-showcase.jpg',
+    image: '/projects/miriver-poster.jpg',
     techStack: ['React Native', 'Expo', 'Firebase', 'Google Maps', 'Next.js'],
     appStoreUrl: 'https://apps.apple.com/ca/app/miriver/id6768277150',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=ca.miriver.app'
@@ -26,7 +26,7 @@ export const projects: Project[] = [
     id: 'stepura',
     title: 'Stepura — Walking Step Tracker',
     description: 'Turns daily walking into virtual expeditions with streaks, challenges and insights. Uses a custom Kotlin native module for hardware step counting and ships in multiple languages.',
-    image: '/projects/stepura-showcase.jpg',
+    image: '/projects/stepura-poster.jpg',
     techStack: ['React Native', 'Kotlin Native Module', 'TypeScript', 'i18n'],
     appStoreUrl: 'https://apps.apple.com/us/app/stepura-walking-step-tracker/id6806730489',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.stepura'
@@ -35,7 +35,7 @@ export const projects: Project[] = [
     id: 'pastlight',
     title: 'PastLight — AI Photo Restoration',
     description: 'Restores old, scratched and faded photos with AI: repairs damage, sharpens faces and colourises, with a before/after slider and a personal gallery.',
-    image: '/projects/pastlight-showcase.jpg',
+    image: '/projects/pastlight-poster.jpg',
     techStack: ['React Native', 'Expo', 'AI Image Processing', 'In-App Purchases'],
     appStoreUrl: 'https://apps.apple.com/us/app/pastlight-photo-restoration/id6813961505',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.idevzone.pastlight'
@@ -44,7 +44,7 @@ export const projects: Project[] = [
     id: 'inobill',
     title: 'InoBill — Invoice & Receipt Maker',
     description: 'Create, preview and send professional invoices and estimates, track clients and payments, and see reports at a glance.',
-    image: '/projects/inobill-showcase.jpg',
+    image: '/projects/inobill-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Firestore', 'PDF Generation'],
     appStoreUrl: 'https://apps.apple.com/us/app/inobill-invoice-receipt-maker/id6812770338',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.idevzone.inobill'
@@ -53,21 +53,21 @@ export const projects: Project[] = [
     id: 'halallenz',
     title: 'HalalLenz — Halal Ingredient Scanner',
     description: 'Scan a barcode or photograph an ingredient list and get a clear verdict — Halal, Doubtful or Not halal — with the ingredient that decided it, following your own school of thought.',
-    image: '/projects/halallenz-showcase.jpg',
+    image: '/projects/halallenz-poster.jpg',
     techStack: ['React Native', 'Expo', 'AI Vision', 'Barcode Scanning']
   },
   {
     id: 'pethealth',
     title: 'PetVera — Pet Vaccine & Health Records',
     description: 'Keeps every pet\'s vaccinations, medications, weight and documents in one place, with reminders and records ready to show the vet or boarding.',
-    image: '/projects/pethealth-showcase.jpg',
+    image: '/projects/pethealth-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Local Notifications', 'PDF Export']
   },
   {
     id: 'timberlens',
     title: 'TimberLens — Wood & Furniture ID',
     description: 'Point the camera at wood or furniture and AI identifies the species, style and estimated value, with restoration and build guides.',
-    image: '/projects/timberlens-showcase.jpg',
+    image: '/projects/timberlens-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Firebase', 'AI Vision']
   }
 ];
