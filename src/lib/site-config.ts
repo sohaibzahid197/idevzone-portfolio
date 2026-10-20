@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
 
   stats: [
     { number: '15+', label: 'Projects' },
-    { number: '2+', label: 'Years' },
+    { number: '5+', label: 'Years' },
     { number: '10+', label: 'Clients' },
     { number: '15+', label: 'Technologies' }
   ],

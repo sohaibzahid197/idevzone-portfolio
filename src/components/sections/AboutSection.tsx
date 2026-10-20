@@ -154,7 +154,7 @@ export default function AboutSection() {
             </TextReveal>
 
             <div className="space-y-4 text-neutral-400 mb-10">
-              <ScrollHighlightText text="I'm a Full Stack Developer with 2+ years of experience building cross-platform mobile and web applications using React Native, Next.js, and AI integrations. I've delivered 15+ applications with advanced features like subscriptions, real-time communication, and NLP-powered AI systems." />
+              <ScrollHighlightText text="I'm a Full Stack Developer with 5+ years of experience building cross-platform mobile and web applications using React Native, Next.js, and AI integrations. I've delivered 15+ applications with advanced features like subscriptions, real-time communication, and NLP-powered AI systems." />
               <ScrollHighlightText text="I focus on building smooth user experiences and scalable solutions. My expertise spans mobile app development, web applications, AI integration, and modern development practices." />
             </div>
 
