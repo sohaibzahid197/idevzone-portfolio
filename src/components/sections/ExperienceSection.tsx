@@ -6,10 +6,20 @@ import TextReveal from '@/components/TextReveal';
 
 const experienceData = [
   {
+    company: 'Upwork',
+    position: 'Full Stack Developer · Full Time Freelance',
+    duration: 'Present',
+    location: 'Remote',
+    description: 'Top Rated freelancer building and shipping mobile and web apps end to end for international clients, from design and development through App Store and Google Play release.',
+    technologies: ['React Native', 'Next.js', 'Node.js', 'Firebase', 'AI Integration'],
+    current: true,
+    badge: 'Top Rated'
+  },
+  {
     company: 'Dzine Media',
     position: 'Full Stack Mobile App Developer',
     duration: 'Dec 2024 – Present',
-    location: 'Remote',
+    location: 'Faisalabad, Pakistan',
     description: 'Leading development of cross-platform mobile applications using React Native, implementing advanced features like real-time communication, AI integrations, and subscription-based monetization models.',
     technologies: ['React Native', 'Node.js', 'Firebase', 'AI Integration', 'Subscriptions'],
     current: true
@@ -18,7 +28,7 @@ const experienceData = [
     company: 'Topsol Innovative Solutions',
     position: 'React Native Developer',
     duration: 'Sep 2024 – Dec 2024',
-    location: 'Remote',
+    location: 'Faisalabad, Pakistan',
     description: 'Developed and maintained mobile applications for iOS and Android platforms, focusing on user experience optimization and performance improvements.',
     technologies: ['React Native', 'iOS', 'Android', 'Firebase', 'REST APIs'],
     current: false
@@ -27,7 +37,7 @@ const experienceData = [
     company: 'Sirovista',
     position: 'Frontend Developer',
     duration: 'Jan 2023 – Dec 2024',
-    location: 'Remote',
+    location: 'Lahore, Pakistan',
     description: 'Built responsive web applications using modern frontend technologies, collaborated with design teams to implement pixel-perfect UI components.',
     technologies: ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Figma'],
     current: false
@@ -79,6 +89,11 @@ export default function ExperienceSection() {
                       <div className="flex items-center gap-2">
                         <Building className="w-4 h-4 text-blue-400 flex-shrink-0" />
                         <h3 className="text-lg font-bold text-white">{exp.company}</h3>
+                        {exp.badge && (
+                          <span className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
+                            {exp.badge}
+                          </span>
+                        )}
                         {exp.current && (
                           <span className="px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-medium rounded-full">
                             Current
