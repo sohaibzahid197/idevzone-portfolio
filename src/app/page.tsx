@@ -12,6 +12,7 @@ import ExperienceSection from '@/components/sections/ExperienceSection';
 import AchievementsSection from '@/components/sections/AchievementsSection';
 import EducationSection from '@/components/sections/EducationSection';
 import ContactSection from '@/components/sections/ContactSection';
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import SmoothScroll from '@/components/SmoothScroll';
 import MagneticCursor from '@/components/MagneticCursor';
 import Preloader from '@/components/Preloader';
@@ -36,6 +37,7 @@ export default function Home() {
               <HeroSection />
               <Marquee />
               <ProjectsSection />
+              <TestimonialsSection />
               <SkillsSection />
               <AboutSection />
               <ExperienceSection />

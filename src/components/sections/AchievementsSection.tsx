@@ -31,8 +31,8 @@ const achievementsData = [
   },
   {
     icon: Star,
-    title: '4.5+ Star Ratings',
-    description: 'Across published applications',
+    title: '5.0★ on Upwork',
+    description: 'Top Rated with 100% Job Success',
     color: '#f59e0b'
   },
   {

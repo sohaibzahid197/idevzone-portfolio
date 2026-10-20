@@ -13,7 +13,8 @@ const experienceData = [
     description: 'Top Rated freelancer building and shipping mobile and web apps end to end for international clients, from design and development through App Store and Google Play release.',
     technologies: ['React Native', 'Next.js', 'Node.js', 'Firebase', 'AI Integration'],
     current: true,
-    badge: 'Top Rated'
+    badge: 'Top Rated · 100% Job Success',
+    link: 'https://www.upwork.com/freelancers/~0199cc47af9a045f0f'
   },
   {
     company: 'Dzine Media',
@@ -88,7 +89,15 @@ export default function ExperienceSection() {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                       <div className="flex items-center gap-2">
                         <Building className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                        <h3 className="text-lg font-bold text-white">{exp.company}</h3>
+                        <h3 className="text-lg font-bold text-white">
+                          {exp.link ? (
+                            <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
+                              {exp.company}
+                            </a>
+                          ) : (
+                            exp.company
+                          )}
+                        </h3>
                         {exp.badge && (
                           <span className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
                             {exp.badge}

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDown, Github, Linkedin } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Star, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -243,6 +243,30 @@ export default function HeroSection() {
             </a>
           </MagneticButton>
         </motion.div>
+
+        {/* Upwork trust strip - read before anyone scrolls */}
+        <motion.a
+          href={siteConfig.social.upwork}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+          className="mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 px-5 py-3 rounded-full border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-sm text-neutral-300 transition-colors"
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-blue-400" aria-hidden="true" />
+            Top Rated on Upwork
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <BadgeCheck className="w-4 h-4 text-green-400" aria-hidden="true" />
+            100% Job Success
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" aria-hidden="true" />
+            5.0 client rating
+          </span>
+        </motion.a>
       </motion.div>
 
       {/* Scroll Indicator */}

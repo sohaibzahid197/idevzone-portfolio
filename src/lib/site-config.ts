@@ -22,6 +22,7 @@ export interface SiteConfig {
     github: string;
     linkedin: string;
     whatsapp: string;
+    upwork: string;
   };
   stats: SiteStat[];
   tagline: string;
@@ -41,7 +42,8 @@ export const siteConfig: SiteConfig = {
   social: {
     github: 'https://github.com/sohaibzahid197',
     linkedin: 'https://www.linkedin.com/in/isohaibzahid/',
-    whatsapp: 'https://wa.me/923213181197'
+    whatsapp: 'https://wa.me/923213181197',
+    upwork: 'https://www.upwork.com/freelancers/~0199cc47af9a045f0f'
   },
 
   stats: [

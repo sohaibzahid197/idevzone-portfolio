@@ -9,6 +9,7 @@ import { scrollToSection } from './SmoothScroll';
 
 const navItems = [
   { name: 'Projects', href: '#projects' },
+  { name: 'Reviews', href: '#reviews' },
   { name: 'Skills', href: '#skills' },
   { name: 'About', href: '#about' },
   { name: 'Experience', href: '#experience' },

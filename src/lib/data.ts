@@ -1,5 +1,43 @@
 import { Project, Skill } from '../types';
 
+export interface Testimonial {
+  id: string;
+  job: string;
+  period: string;
+  headline: string;
+  quote: string;
+  endorsements: string[];
+}
+
+// Verbatim Upwork reviews (5.0 each). The Phase 2 review is trimmed where it
+// named the client's product, so no card reads as client work.
+export const testimonials: Testimonial[] = [
+  {
+    id: 'phase-2',
+    job: 'Senior Mobile App Developer — Native iOS/Android Phase 2 MVP',
+    period: 'Jun – Aug 2026',
+    headline: 'There\u2019s no one better for the job.',
+    quote: 'Working with Sohaib has been an exceptional experience from start to finish. He is punctual, reliable, highly communicative, and always made sure I understood what was happening throughout the development process. What stood out most was how fair and transparent he was. Any changes, challenges, or additional work were communicated clearly, and he was always extremely reasonable when it came to negotiating scope and cost. I never felt like I was being taken advantage of \u2014 I genuinely felt like he cared about the success of the project. \u2026 I would recommend Sohaib without hesitation to anyone looking for a skilled, trustworthy developer who takes pride in his work. \u2026 As far as I\u2019m concerned, there\u2019s no one better for the job.',
+    endorsements: ['Native App', 'iOS Development', 'Mobile App Development', 'Reliable']
+  },
+  {
+    id: 'store-launch',
+    job: 'Senior React Native (Expo) Dev — Security Hardening, UI Polish & App Stores Launch',
+    period: 'Feb – Jun 2026',
+    headline: 'Expertly navigated the submission processes for both the App Store and Google Play.',
+    quote: 'Sohaib is an outstanding mobile developer who delivered excellent results on our React Native application. He successfully managed the technical build and expertly navigated the submission processes for both the App Store and Google Play. His communication is consistently clear, and he handles project milestones and administrative details with complete professionalism and integrity. He is highly skilled, reliable, and a valuable asset to any development project. I highly recommend him.',
+    endorsements: ['Reliable', 'Clear Communicator', 'Professional']
+  },
+  {
+    id: 'phase-1',
+    job: 'Senior Mobile App Developer — Native iOS/Android Phase 1 MVP',
+    period: 'May – Jun 2026',
+    headline: 'He delivers results quickly, pays attention to detail, and takes pride in his work.',
+    quote: 'Sohaib has been an absolute pleasure to work with throughout the development of our app. From day one, he has been highly communicative, responsive, and committed to delivering quality work. What impressed me most was his ability to work efficiently without sacrificing quality. He delivers results quickly, pays attention to detail, and takes pride in his work. Whenever challenges arose, he approached them with a solution-oriented mindset and worked collaboratively to find the best path forward. He has also been very respectful of our budget, helping us prioritize features and identify cost-effective solutions without compromising the overall vision of the project. As a startup founder, that level of flexibility and transparency has been incredibly valuable. I would not hesitate to work with him again (already starting another contract with him) and would confidently recommend him to anyone looking for a skilled developer who delivers high-quality results.',
+    endorsements: ['Committed to Quality', 'Solution Oriented', 'Clear Communicator', 'Detail Oriented']
+  }
+];
+
 // Posters live in /public/projects and are 16:9 (1600x900). Store links are
 // only set for apps that are actually published; a card renders a button per
 // link that is present, so an unreleased app simply shows its poster.

@@ -237,6 +237,19 @@ export default function ContactSection() {
               </div>
             </div>
 
+            {/* Client quote - proof at the moment of deciding to get in touch */}
+            <figure className="p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl mt-4">
+              <blockquote className="text-sm text-neutral-200 leading-relaxed">
+                &ldquo;He is highly skilled, reliable, and a valuable asset to any development project. I highly recommend him.&rdquo;
+              </blockquote>
+              <figcaption className="text-xs text-neutral-500 mt-2">
+                Upwork client · 5.0 rating ·{' '}
+                <a href={siteConfig.social.upwork} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                  View profile
+                </a>
+              </figcaption>
+            </figure>
+
             {/* Availability */}
             <div className="p-4 bg-green-500/[0.05] border border-green-500/10 rounded-xl mt-4">
               <div className="flex items-center gap-2 mb-1">
