@@ -1,6 +1,6 @@
 'use client';
 
-import SkillsKeyboard from '@/components/SkillsKeyboard';
+import SkillsGlobe from '@/components/SkillsGlobe';
 import ScrollReveal from '@/components/ScrollReveal';
 import TextReveal from '@/components/TextReveal';
 
@@ -22,9 +22,9 @@ export default function SkillsSection() {
           </p>
         </ScrollReveal>
 
-        <ScrollReveal variant="fade-up">
-          <SkillsKeyboard />
-        </ScrollReveal>
+        <div>
+          <SkillsGlobe />
+        </div>
       </div>
     </section>
   );

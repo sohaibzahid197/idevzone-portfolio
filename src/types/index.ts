@@ -10,7 +10,7 @@ export interface Project {
   githubUrl?: string;
 }
 
-export type SkillCategory = 'frontend' | 'mobile' | 'backend' | 'database' | 'tools';
+export type SkillCategory = 'mobile' | 'frontend' | 'backend' | 'database' | 'cloud' | 'ai' | 'payments' | 'tools';
 
 export interface Skill {
   // `name` is the stable identifier (React keys, lookups); `label` is what the UI prints.
@@ -19,5 +19,6 @@ export interface Skill {
   category: SkillCategory;
   // Brand hex, used for chips, dots and marquee accents on the dark background.
   color: string;
+  // simple-icons slug for the logo; skills without one show a coloured dot.
   icon?: string;
 }

@@ -44,7 +44,7 @@ export const testimonials: Testimonial[] = [
 export const projects: Project[] = [
   {
     id: 'biteset',
-    title: 'BiteSet — Meal Plan & Nutrition',
+    title: 'BiteSet: Meal Plan & Nutrition',
     description: 'Personalised meal plans that balance your macros without calorie counting, with one-tap grocery lists, dish swaps and progress tracking. Backed by a custom API of 195 endpoints and an admin dashboard.',
     image: '/projects/biteset-poster.jpg',
     techStack: ['React Native', 'Node.js', 'Express', 'Prisma', 'PostgreSQL'],
@@ -53,25 +53,25 @@ export const projects: Project[] = [
   },
   {
     id: 'miriver',
-    title: 'MiRiver — Live Traffic & Community',
+    title: 'MiRiver: Live Traffic & Community',
     description: 'Real-time community traffic app with a live map, incident reports that expire automatically, a community feed and a points-and-tiers reward system, managed from a Next.js admin panel.',
-    image: '/projects/miriver-poster.jpg',
+    image: '/projects/miriver-feature.jpg',
     techStack: ['React Native', 'Expo', 'Firebase', 'Google Maps', 'Next.js'],
     appStoreUrl: 'https://apps.apple.com/ca/app/miriver/id6768277150',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=ca.miriver.app'
   },
   {
     id: 'stepura',
-    title: 'Stepura — Walking Step Tracker',
+    title: 'Stepura: Walking Step Tracker',
     description: 'Turns daily walking into virtual expeditions with streaks, challenges and insights. Uses a custom Kotlin native module for hardware step counting and ships in multiple languages.',
-    image: '/projects/stepura-poster.jpg',
+    image: '/projects/stepura-feature.jpg',
     techStack: ['React Native', 'Kotlin Native Module', 'TypeScript', 'i18n'],
     appStoreUrl: 'https://apps.apple.com/us/app/stepura-walking-step-tracker/id6806730489',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.stepura'
   },
   {
     id: 'pastlight',
-    title: 'PastLight — AI Photo Restoration',
+    title: 'PastLight: AI Photo Restoration',
     description: 'Restores old, scratched and faded photos with AI: repairs damage, sharpens faces and colourises, with a before/after slider and a personal gallery.',
     image: '/projects/pastlight-poster.jpg',
     techStack: ['React Native', 'Expo', 'AI Image Processing', 'In-App Purchases'],
@@ -80,7 +80,7 @@ export const projects: Project[] = [
   },
   {
     id: 'inobill',
-    title: 'InoBill — Invoice & Receipt Maker',
+    title: 'InoBill: Invoice & Receipt Maker',
     description: 'Create, preview and send professional invoices and estimates, track clients and payments, and see reports at a glance.',
     image: '/projects/inobill-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Firestore', 'PDF Generation'],
@@ -89,21 +89,21 @@ export const projects: Project[] = [
   },
   {
     id: 'halallenz',
-    title: 'HalalLenz — Halal Ingredient Scanner',
+    title: 'HalalLenz: Halal Ingredient Scanner',
     description: 'Scan a barcode or photograph an ingredient list and get a clear verdict — Halal, Doubtful or Not halal — with the ingredient that decided it, following your own school of thought.',
     image: '/projects/halallenz-poster.jpg',
     techStack: ['React Native', 'Expo', 'AI Vision', 'Barcode Scanning']
   },
   {
     id: 'pethealth',
-    title: 'PetVera — Pet Vaccine & Health Records',
+    title: 'PetVera: Pet Vaccine & Health Records',
     description: 'Keeps every pet\'s vaccinations, medications, weight and documents in one place, with reminders and records ready to show the vet or boarding.',
     image: '/projects/pethealth-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Local Notifications', 'PDF Export']
   },
   {
     id: 'timberlens',
-    title: 'TimberLens — Wood & Furniture ID',
+    title: 'TimberLens: Wood & Furniture ID',
     description: 'Point the camera at wood or furniture and AI identifies the species, style and estimated value, with restoration and build guides.',
     image: '/projects/timberlens-poster.jpg',
     techStack: ['React Native', 'TypeScript', 'Firebase', 'AI Vision']
@@ -112,59 +112,55 @@ export const projects: Project[] = [
 
 export const skills: Skill[] = [
   // Mobile Development
-  { name: 'React Native', label: 'React Native', category: 'mobile', color: '#61dafb' },
-  { name: 'iOS', label: 'iOS', category: 'mobile', color: '#a3aaae' },
-  { name: 'Android', label: 'Android', category: 'mobile', color: '#3ddc84' },
-  { name: 'macOS', label: 'macOS', category: 'mobile', color: '#a3aaae' },
+  { name: 'React Native', label: 'React Native', category: 'mobile', color: '#61dafb', icon: 'react' },
+  { name: 'iOS', label: 'iOS', category: 'mobile', color: '#a3aaae', icon: 'apple' },
+  { name: 'Android', label: 'Android', category: 'mobile', color: '#3ddc84', icon: 'android' },
+  { name: 'macOS', label: 'macOS', category: 'mobile', color: '#a3aaae', icon: 'apple' },
 
   // Frontend
-  { name: 'React.js', label: 'React.js', category: 'frontend', color: '#61dafb' },
-  { name: 'Next.js', label: 'Next.js', category: 'frontend', color: '#ffffff' },
-  { name: 'TypeScript', label: 'TypeScript', category: 'frontend', color: '#3178c6' },
-  { name: 'Tailwind CSS', label: 'Tailwind CSS', category: 'frontend', color: '#38bdf8' },
-  { name: 'GSAP', label: 'GSAP', category: 'frontend', color: '#0ae448' },
-  { name: 'Framer Motion', label: 'Framer Motion', category: 'frontend', color: '#0055ff' },
+  { name: 'React.js', label: 'React.js', category: 'frontend', color: '#61dafb', icon: 'react' },
+  { name: 'Next.js', label: 'Next.js', category: 'frontend', color: '#ffffff', icon: 'nextdotjs' },
+  { name: 'TypeScript', label: 'TypeScript', category: 'frontend', color: '#3178c6', icon: 'typescript' },
+  { name: 'Tailwind CSS', label: 'Tailwind CSS', category: 'frontend', color: '#38bdf8', icon: 'tailwindcss' },
+  { name: 'GSAP', label: 'GSAP', category: 'frontend', color: '#0ae448', icon: 'greensock' },
+  { name: 'Framer Motion', label: 'Framer Motion', category: 'frontend', color: '#0055ff', icon: 'framer' },
 
   // Backend
-  { name: 'Node.js', label: 'Node.js', category: 'backend', color: '#5fa04e' },
-  { name: 'Express.js', label: 'Express.js', category: 'backend', color: '#9ca3af' },
+  { name: 'Node.js', label: 'Node.js', category: 'backend', color: '#5fa04e', icon: 'nodedotjs' },
+  { name: 'Express.js', label: 'Express.js', category: 'backend', color: '#9ca3af', icon: 'express' },
   { name: 'REST APIs', label: 'REST APIs', category: 'backend', color: '#3b82f6' },
-  { name: 'GraphQL', label: 'GraphQL', category: 'backend', color: '#e10098' },
-  { name: 'Firebase', label: 'Firebase', category: 'backend', color: '#ffca28' },
+  { name: 'GraphQL', label: 'GraphQL', category: 'backend', color: '#e10098', icon: 'graphql' },
+  { name: 'Firebase', label: 'Firebase', category: 'backend', color: '#ffca28', icon: 'firebase' },
 
   // Database
-  { name: 'Firebase Firestore', label: 'Firebase Firestore', category: 'database', color: '#ffa000' },
-  { name: 'MongoDB', label: 'MongoDB', category: 'database', color: '#47a248' },
-  { name: 'MySQL', label: 'MySQL', category: 'database', color: '#4479a1' },
-  { name: 'SQLite', label: 'SQLite', category: 'database', color: '#0f80cc' },
-
-  // Everything below shares the 'tools' category because SkillsSection only
-  // configures five cards. The sub-headings are the intended grouping and
-  // should become real categories once that section has matching config.
+  { name: 'Firebase Firestore', label: 'Firebase Firestore', category: 'database', color: '#ffa000', icon: 'firebase' },
+  { name: 'MongoDB', label: 'MongoDB', category: 'database', color: '#47a248', icon: 'mongodb' },
+  { name: 'MySQL', label: 'MySQL', category: 'database', color: '#4479a1', icon: 'mysql' },
+  { name: 'SQLite', label: 'SQLite', category: 'database', color: '#0f80cc', icon: 'sqlite' },
 
   // Cloud & DevOps
-  { name: 'AWS', label: 'AWS', category: 'tools', color: '#ff9900' },
-  { name: 'Firebase Hosting', label: 'Firebase Hosting', category: 'tools', color: '#f57c00' },
-  { name: 'Docker', label: 'Docker', category: 'tools', color: '#2496ed' },
-  { name: 'Git', label: 'Git', category: 'tools', color: '#f05032' },
+  { name: 'AWS', label: 'AWS', category: 'cloud', color: '#ff9900' },
+  { name: 'Firebase Hosting', label: 'Firebase Hosting', category: 'cloud', color: '#f57c00', icon: 'firebase' },
+  { name: 'Docker', label: 'Docker', category: 'cloud', color: '#2496ed', icon: 'docker' },
+  { name: 'Git', label: 'Git', category: 'cloud', color: '#f05032', icon: 'git' },
 
   // AI/ML
-  { name: 'OpenAI API', label: 'OpenAI API', category: 'tools', color: '#10a37f' },
-  { name: 'NLP', label: 'NLP', category: 'tools', color: '#8b5cf6' },
-  { name: 'Image Processing', label: 'Image Processing', category: 'tools', color: '#ec4899' },
-  { name: 'Summarization', label: 'Summarization', category: 'tools', color: '#a855f7' },
+  { name: 'OpenAI API', label: 'OpenAI API', category: 'ai', color: '#10a37f' },
+  { name: 'NLP', label: 'NLP', category: 'ai', color: '#8b5cf6' },
+  { name: 'Image Processing', label: 'Image Processing', category: 'ai', color: '#ec4899' },
+  { name: 'Summarization', label: 'Summarization', category: 'ai', color: '#a855f7' },
 
   // Payment & Monetization
-  { name: 'IAP', label: 'IAP', category: 'tools', color: '#22c55e' },
-  { name: 'AdMob', label: 'AdMob', category: 'tools', color: '#ea4335' },
-  { name: 'Subscription Models', label: 'Subscription Models', category: 'tools', color: '#14b8a6' },
+  { name: 'IAP', label: 'IAP', category: 'payments', color: '#22c55e' },
+  { name: 'AdMob', label: 'AdMob', category: 'payments', color: '#ea4335', icon: 'googleadmob' },
+  { name: 'Subscription Models', label: 'Subscription Models', category: 'payments', color: '#14b8a6' },
 
   // Tools
-  { name: 'Xcode', label: 'Xcode', category: 'tools', color: '#1575f9' },
-  { name: 'Android Studio', label: 'Android Studio', category: 'tools', color: '#4285f4' },
+  { name: 'Xcode', label: 'Xcode', category: 'tools', color: '#1575f9', icon: 'xcode' },
+  { name: 'Android Studio', label: 'Android Studio', category: 'tools', color: '#4285f4', icon: 'androidstudio' },
   { name: 'VS Code', label: 'VS Code', category: 'tools', color: '#007acc' },
-  { name: 'Postman', label: 'Postman', category: 'tools', color: '#ff6c37' },
-  { name: 'Figma', label: 'Figma', category: 'tools', color: '#f24e1e' }
+  { name: 'Postman', label: 'Postman', category: 'tools', color: '#ff6c37', icon: 'postman' },
+  { name: 'Figma', label: 'Figma', category: 'tools', color: '#f24e1e', icon: 'figma' }
 ];
 
 // Single source for the scrolling tech band, so Marquee never drifts from skills.
